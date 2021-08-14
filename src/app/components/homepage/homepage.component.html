@@ -1,2 +1,15 @@
 <app-header></app-header>
-<app-login></app-login>
+<div class="bg-image" fxLayout fxLayoutAlign="center center">
+    <mat-card fxFlex.xs="100%" >
+      <mat-tab-group dynamicHeight>
+        <mat-tab label="Login">
+          <app-login></app-login>
+        </mat-tab>
+        <mat-tab label="Sign up">
+          <app-signup></app-signup>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card>
+</div>
+
+
