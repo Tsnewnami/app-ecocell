@@ -3,31 +3,33 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AppRoutingModule } from './app.routing.module';
 import { MaterialModule } from './material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { HomepageComponent } from './components/homepage/homepage.component';
-import { HeaderComponent } from './components/homepage/header/header.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { LoginComponent } from './components/homepage/login/login.component';
-import { SignupComponent } from './components/homepage/signup/signup.component';
+import { AuthModule } from './auth/auth.module';
+import { RouterModule, Routes } from '@angular/router';
+
+const routes: Routes = [
+  {
+    path: '**',
+    redirectTo: '/'
+  }
+];
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomepageComponent,
-    HeaderComponent,
-    LoginComponent,
-    SignupComponent,
+
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     MaterialModule,
-    AppRoutingModule,
     FlexLayoutModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AuthModule.forRoot(),
+    RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })
   ],
   providers: [],
   bootstrap: [AppComponent]
