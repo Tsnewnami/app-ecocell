@@ -100,9 +100,16 @@
             ],
             "scripts": []
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {}
         }
       }
     }
   },
-  "defaultProject": "ecocell-appli"
+  "defaultProject": "ecocell-appli",
+  "cli": {
+    "defaultCollection": "@ngrx/schematics"
+  }
 }

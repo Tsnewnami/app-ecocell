@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "app-ecocell"
+  },
+  "targets": {
+    "app-ecocell": {
+      "hosting": {
+        "ecocell-appli": [
+          "app-ecocell"
+        ]
+      }
+    }
   }
 }

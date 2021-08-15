@@ -8,10 +8,13 @@
       (ngSubmit)="onSubmit(f)">
       <mat-form-field>
         <input
-          type="email"
-          matInput
-          placeholder="Your email"
-          formControlName="email">
+        type="email"
+        matInput
+        placeholder="Your Email"
+        ngModel
+        name="email"
+        email
+        required>
         <mat-hint>Please enter a valid email.</mat-hint>
         <mat-error>Invalid or missing email.</mat-error>
       </mat-form-field>
