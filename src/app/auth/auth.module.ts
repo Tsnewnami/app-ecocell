@@ -5,7 +5,9 @@ import { MatCardModule } from "@angular/material/card";
 import { MatInputModule } from "@angular/material/input";
 import { RouterModule } from "@angular/router";
 import { MatButtonModule } from "@angular/material/button";
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
+import { MatDialogModule } from '@angular/material/dialog';
 import { AuthService } from "./auth.service";
 import { AuthGuard } from './auth.guard';
 import { HomepageComponent } from './homepage/homepage.component';
@@ -21,6 +23,7 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects'
 import { AuthEffects } from './auth.effect';;
 import * as fromAuth from './reducers';
+import { EmailVerificationComponent } from './email-verification/email-verification.component';
 
 @NgModule({
   imports: [
@@ -31,15 +34,18 @@ import * as fromAuth from './reducers';
       MatInputModule,
       MatButtonModule,
       MatSnackBarModule,
+      MatDialogModule,
       RouterModule.forChild([{path: '', component: HomepageComponent}]),
       MatTabsModule,
       MatFormFieldModule,
       MatToolbarModule,
+      MatProgressSpinnerModule,
       FlexLayoutModule,
       StoreModule.forFeature(fromAuth.authFeatureKey, fromAuth.authReduder),
       EffectsModule.forFeature([AuthEffects]),
+
   ],
-  declarations: [HomepageComponent, HeaderComponent, LoginComponent, SignupComponent],
+  declarations: [HomepageComponent, HeaderComponent, LoginComponent, SignupComponent, EmailVerificationComponent],
   exports: [HomepageComponent, HeaderComponent, LoginComponent, SignupComponent]
 })
 

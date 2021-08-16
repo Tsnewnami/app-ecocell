@@ -1,5 +1,6 @@
-
-  <section class="login-homepage" fxLayout fxLayoutAlign = "center">
+<mat-spinner *ngIf="loadingState" fxLayout fxLayoutAlign = "center center" style="margin:0 auto;"
+mode="indeterminate"></mat-spinner>
+  <section *ngIf="!loadingState" class="login-homepage" fxLayout fxLayoutAlign = "center">
     <form
       fxLayout="column"
       fxLayoutAlign="center center"

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { AngularFireAuth } from '@angular/fire/auth';
 import firebase from 'firebase/app';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'signup',
@@ -10,11 +11,16 @@ import firebase from 'firebase/app';
 })
 export class SignupComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private authService: AuthService
+  ) { }
 
   ngOnInit(): void {
   }
 
-  onSubmit(form: NgForm): void {}
+  onSubmit(form: NgForm): void {
+    const value = form.value;
+    this.authService.signup(value.email, value.password);
+  }
 
 }
