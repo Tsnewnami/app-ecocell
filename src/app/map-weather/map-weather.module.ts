@@ -2,12 +2,13 @@ import { HomeComponent } from './home/home.component';
 
 import {ModuleWithProviders, NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import { MapComponent } from './home/map/map.component';
 
 @NgModule({
   imports: [
       CommonModule,
   ],
-  declarations: [HomeComponent],
+  declarations: [HomeComponent, MapComponent],
   exports: [HomeComponent]
 })
 
