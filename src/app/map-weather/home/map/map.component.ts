@@ -1,26 +1,38 @@
-import { Component, OnInit } from '@angular/core';
-import { Loader } from '@googlemaps/js-api-loader';
+import { GoogleMapsService } from '../../services/google-maps.service';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css']
 })
-export class MapComponent implements OnInit {
+export class MapComponent implements OnInit, AfterViewInit {
+  @ViewChild('map', {read: ElementRef, static: true}) mapElement: ElementRef<HTMLElement>;
 
-  constructor() { }
+  map: google.maps.Map
+  drawingTools: google.maps.drawing.DrawingManager
+
+  constructor(
+    private googleMapsService: GoogleMapsService
+  ) { }
 
   ngOnInit(): void {
-    let loader = new Loader({
-      apiKey: 'AIzaSyDiA3LROOuEYVqF13dJNuLzBulxyy8d5Dc',
-    })
+    // this.googleMapsService.initLoader(this.mapElement as HTMLElement)
 
-    loader.load().then(() => {
-      new google.maps.Map(document.getElementById("map"), {
-        center: {lat: 50, lng: 6},
-        zoom: 6,
-      })
-    })
+
+    //   this.drawingTools = this.googleMapsService.initDrawingTools();
+    //   this.drawingTools.setMap(this.map);
+    //   this.googleMapsService.setMap(this.map)
+    //   this.googleMapsService.setDrawingTools(this.drawingTools);
+    //   this.googleMapsService.setEventListeners();
+    //   this.googleMapsService.panTo(new google.maps.LatLng(-34, 151));
+
+    // })
+
+  }
+
+  ngAfterViewInit(): void {
+    this.googleMapsService.initMap(this.mapElement.nativeElement)
   }
 
 }

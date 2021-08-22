@@ -8,7 +8,7 @@ import { AuthState } from './reducers';
 import { MatDialog } from '@angular/material/dialog';
 import { EmailVerificationComponent } from './email-verification/email-verification.component';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
