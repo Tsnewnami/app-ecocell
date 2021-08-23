@@ -1,3 +1,4 @@
+import { GoogleMapsPolygonService } from './../../services/google-maps-polygon.service';
 import { GoogleMapsService } from '../../services/google-maps.service';
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 
@@ -6,33 +7,24 @@ import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angula
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css']
 })
-export class MapComponent implements OnInit, AfterViewInit {
+export class MapComponent implements OnInit {
   @ViewChild('map', {read: ElementRef, static: true}) mapElement: ElementRef<HTMLElement>;
-
-  map: google.maps.Map
-  drawingTools: google.maps.drawing.DrawingManager
-
+  @ViewChild('pacinput', {read: ElementRef, static: true}) searchBoxElement: ElementRef<HTMLInputElement>;
   constructor(
-    private googleMapsService: GoogleMapsService
+    private googleMapsService: GoogleMapsService,
+    private googleMapsPolygonService: GoogleMapsPolygonService
   ) { }
 
   ngOnInit(): void {
-    // this.googleMapsService.initLoader(this.mapElement as HTMLElement)
-
-
-    //   this.drawingTools = this.googleMapsService.initDrawingTools();
-    //   this.drawingTools.setMap(this.map);
-    //   this.googleMapsService.setMap(this.map)
-    //   this.googleMapsService.setDrawingTools(this.drawingTools);
-    //   this.googleMapsService.setEventListeners();
-    //   this.googleMapsService.panTo(new google.maps.LatLng(-34, 151));
-
-    // })
+    this.googleMapsService.initMap(this.mapElement.nativeElement, this.searchBoxElement.nativeElement);
 
   }
 
-  ngAfterViewInit(): void {
-    this.googleMapsService.initMap(this.mapElement.nativeElement)
+  drawPolygon() {
+    this.googleMapsPolygonService.initPolygonEvent();
   }
 
+  finishPolygon() {
+    this.googleMapsPolygonService.stopPolygonEvent();
+  }
 }

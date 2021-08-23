@@ -1,4 +1,14 @@
+<input
+id="pac-input"
+class="controls"
+type="text"
+placeholder="Search Farm Location"
+ngModel
+#pacinput
+/>
 <div class="map-screen" id="map" ngModel #map>
 
 </div>
+<button (click)="drawPolygon()">Draw Polygon</button>
+<button (click)="finishPolygon()">Finish Drawing Polygon</button>
 
