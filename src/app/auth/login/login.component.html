@@ -15,6 +15,7 @@ mode="indeterminate"></mat-spinner>
         ngModel
         name="email"
         email
+        #emailInput="ngModel"
         required>
         <mat-hint>Please enter a valid email.</mat-hint>
         <mat-error>Invalid or missing email.</mat-error>

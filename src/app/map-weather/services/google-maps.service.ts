@@ -4,6 +4,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Injectable } from '@angular/core';
 import { Loader } from '@googlemaps/js-api-loader';
 import { environment } from 'src/environments/environment';
+import { map } from 'rxjs/operators';
+import { Subject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +15,7 @@ export class GoogleMapsService {
   map: google.maps.Map;
   drawingTools: google.maps.drawing.DrawingManager;
   private polygons: Polygon[] = [];
+  polygonsChanged = new Subject<Polygon[]>();
 
   constructor(
     private snackBar: MatSnackBar,
@@ -52,15 +55,18 @@ export class GoogleMapsService {
       } else{
         const userId = JSON.parse(localStorage.getItem('user'))['id'];
         var coords = this.convertMvcToArray(polygon.getPath());
+        var index = this.polygons.length;
         const newPoly:Polygon = {
-          index: 1,
+          index: index,
           userId: userId,
-          name: userId + '1',
+          name: 'Corn' + index.toString(),
           lat: coords[0],
           long: coords[1]
         }
 
+
         this.polygons.push(newPoly);
+        this.polygonsChanged.next([...this.polygons]);
         this.pushPolygonToDb(newPoly);
       }
     });
@@ -116,7 +122,7 @@ export class GoogleMapsService {
     this.map.panTo(ltLng);
   }
 
-  convertMvcToArray(pathArray) {
+  private convertMvcToArray(pathArray) {
     var lat: number[] = [];
     var long: number[] = [];
     for (var a = 0; a < pathArray.length; a++){
@@ -127,8 +133,77 @@ export class GoogleMapsService {
     return [lat, long];
   }
 
+  polygonAvailableCheck(): Observable<boolean> {
+    var loaded = new Subject<boolean>();
+    const userId = JSON.parse(localStorage.getItem('user'))['id'];
+    this.fireStore.collection('userPolygons').doc(userId).collection('polygons')
+      .get()
+      .subscribe((docData) => {
+        if (!docData.empty) {
+          console.log("Polygon data available");
+          loaded.next(true);
+        } else {
+          console.log("Polygon data not available");
+          loaded.next(false);
+      }
+    }, error =>{
+      console.log(error);
+    });
+
+    return loaded.asObservable();
+  }
+
+ fetchAllAvailablePolygonsForUser(freshLogin?: boolean) {
+    const userId = JSON.parse(localStorage.getItem('user'))['id'];
+    this.fireStore.collection('userPolygons').doc(userId).collection('polygons')
+    .snapshotChanges()
+    .pipe(map( docArray => {
+      return docArray.map( doc => {
+        return(
+           {
+            index: doc.payload.doc.data()['index'],
+            userId: doc.payload.doc.data()['userId'],
+            name: doc.payload.doc.data()['name'],
+            lat: doc.payload.doc.data()['lat'],
+            long: doc.payload.doc.data()['long'],
+         }
+      );
+      });
+    }))
+    .subscribe((polygonsDb: Polygon[]) => {
+      if (freshLogin){
+        polygonsDb.forEach((polygon) => this.createPolygon(polygon));
+      }
+      this.polygons = polygonsDb;
+      this.polygonsChanged.next([...this.polygons]);
+    }, error => {
+      this.snackBar.open(`Failed to fetch polygons. Please try again later.`, null, {
+        duration: 6000
+      })
+    })
+  }
+
   pushPolygonToDb(polygon: Polygon) {
     this.fireStore.collection('userPolygons').doc(polygon.userId).collection('polygons').doc(polygon.name).set(polygon);
+  }
+
+  createPolygon(polygon: Polygon) {
+    var paths = []
+    for (let i = 0; i < polygon.lat.length; i++) {
+      const gData = new google.maps.LatLng(polygon.lat[i], polygon.long[i]);
+      paths.push(gData);
+    }
+
+    const poly = new google.maps.Polygon({
+      paths: paths,
+      strokeColor: "#fcba03",
+      strokeOpacity: 0.8,
+      strokeWeight: 3,
+      fillColor: "#FF0000",
+      fillOpacity: 0.35
+    })
+
+    poly.setMap(this.map)
   }
 
 }

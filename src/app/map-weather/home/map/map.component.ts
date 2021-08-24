@@ -15,8 +15,17 @@ export class MapComponent implements OnInit {
     private googleMapsPolygonService: GoogleMapsPolygonService
   ) { }
 
-  ngOnInit(): void {
+  ngOnInit(){
     this.googleMapsService.initMap(this.mapElement.nativeElement, this.searchBoxElement.nativeElement);
+    this.googleMapsService.polygonAvailableCheck()
+        .subscribe(loaded => {
+          if (loaded) {
+            console.log('Attempting to load polygon data');
+            this.googleMapsService.fetchAllAvailablePolygonsForUser(true);
+          } else {
+            return;
+          }
+        })
 
   }
 

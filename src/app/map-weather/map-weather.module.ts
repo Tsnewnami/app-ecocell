@@ -1,6 +1,5 @@
 import { GoogleMapsService } from '../map-weather/services/google-maps.service';
 import { HomeComponent } from './home/home.component';
-import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 
 import {ModuleWithProviders, NgModule} from '@angular/core';
@@ -15,7 +14,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
       ReactiveFormsModule,
       FormsModule,
       MatSnackBarModule,
-      AngularFireModule,
       AngularFirestoreModule
   ],
   declarations: [HomeComponent, MapComponent],
