@@ -1,14 +1,15 @@
+import { Polygon } from './../models/polygon.model';
 import { GoogleMapsService } from './google-maps.service';
 import { Injectable } from "@angular/core";
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class GoogleMapsPolygonService {
-  listener;
 
   constructor(
-    private googleMapsService: GoogleMapsService
+    private googleMapsService: GoogleMapsService,
     ){}
 
     initPolygonEvent() {
@@ -24,5 +25,7 @@ export class GoogleMapsPolygonService {
         polygonOptions: {editable:false,fillColor:'#00ffff',strokeColor:'#ff0000',strokeWeight:2}
       });
     }
+
+
 
 }

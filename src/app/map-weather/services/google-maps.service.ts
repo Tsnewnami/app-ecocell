@@ -1,3 +1,5 @@
+import { AngularFirestore } from '@angular/fire/firestore';
+import { Polygon } from './../models/polygon.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Injectable } from '@angular/core';
 import { Loader } from '@googlemaps/js-api-loader';
@@ -10,10 +12,11 @@ export class GoogleMapsService {
   private loader: Loader;
   map: google.maps.Map;
   drawingTools: google.maps.drawing.DrawingManager;
-
+  private polygons: Polygon[] = [];
 
   constructor(
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private fireStore: AngularFirestore
   ) {}
 
   private initLoader(){
@@ -38,7 +41,7 @@ export class GoogleMapsService {
 
   setPolygonListener(){
     google.maps.event.addListener(this.drawingTools,'polygoncomplete',(polygon) => {
-      const haLimit = 40;
+      const haLimit = 40000000000;
       const polyAreaHa = google.maps.geometry.spherical.computeArea(polygon.getPath()) / 10000;
 
       if (polyAreaHa > haLimit){
@@ -46,12 +49,19 @@ export class GoogleMapsService {
         this.snackBar.open(`Error: polygon must be less than or equal to polygon Ha limit: ${haLimit} Ha`, null, {
           duration: 6000
         })
-        // alert(`Error: polygon must be less than or equal to polygon Ha limit: ${haLimit} ha`)
       } else{
-        var polygonBounds = polygon.getPath();
-        for (var a = 0; a < polygonBounds.length; a++){
-          console.log(polygonBounds.getAt(a).lat(), polygonBounds.getAt(a).lng());
+        const userId = JSON.parse(localStorage.getItem('user'))['id'];
+        var coords = this.convertMvcToArray(polygon.getPath());
+        const newPoly:Polygon = {
+          index: 1,
+          userId: userId,
+          name: userId + '1',
+          lat: coords[0],
+          long: coords[1]
         }
+
+        this.polygons.push(newPoly);
+        this.pushPolygonToDb(newPoly);
       }
     });
   }
@@ -102,8 +112,23 @@ export class GoogleMapsService {
     })
   }
 
-
   panTo(ltLng: google.maps.LatLng){
     this.map.panTo(ltLng);
   }
+
+  convertMvcToArray(pathArray) {
+    var lat: number[] = [];
+    var long: number[] = [];
+    for (var a = 0; a < pathArray.length; a++){
+      lat.push(pathArray.getAt(a).lat());
+      long.push(pathArray.getAt(a).lng());
+    }
+
+    return [lat, long];
+  }
+
+  pushPolygonToDb(polygon: Polygon) {
+    this.fireStore.collection('userPolygons').doc(polygon.userId).set(polygon)
+  }
+
 }
