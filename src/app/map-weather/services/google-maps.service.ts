@@ -128,7 +128,7 @@ export class GoogleMapsService {
   }
 
   pushPolygonToDb(polygon: Polygon) {
-    this.fireStore.collection('userPolygons').doc(polygon.userId).set(polygon)
+    this.fireStore.collection('userPolygons').doc(polygon.userId).collection('polygons').doc(polygon.name).set(polygon);
   }
 
 }
