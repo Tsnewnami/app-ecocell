@@ -23,11 +23,13 @@ export class AuthService {
     private store: Store<AuthState>,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private router: Router) { }
+    private router: Router) {
+
+    }
 
   async login(email: string, password: string){
     this.isLoading.next(true);
-    this.auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(
+    this.auth.setPersistence(firebase.auth.Auth.Persistence.SESSION).then(
       () =>
       this.auth.signInWithEmailAndPassword(
         email,

@@ -17,7 +17,6 @@ import { AngularFireModule } from '@angular/fire';
 import { EffectsModule } from '@ngrx/effects';
 import { EntityDataModule } from '@ngrx/data';
 import { HttpClientModule } from '@angular/common/http';
-import { PolygonsResolver } from './map-weather/services/polygons.resolver';
 
 const routes: Routes = [
   {
@@ -48,7 +47,7 @@ const routes: Routes = [
     EffectsModule.forRoot([]),
     EntityDataModule.forRoot({}),
   ],
-  providers: [PolygonsResolver],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

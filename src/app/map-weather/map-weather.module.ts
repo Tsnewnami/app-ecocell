@@ -3,12 +3,9 @@ import { EntityDataService, EntityDefinitionService, EntityMetadataMap } from '@
 import { GoogleMapsService } from '../map-weather/services/google-maps.service';
 import { HomeComponent } from './home/home.component';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
-
-import {ModuleWithProviders, NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import { ModuleWithProviders, NgModule} from '@angular/core';
 import { MapComponent } from './home/map/map.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '../auth/auth.guard';
 import { PolygonsResolver } from './services/polygons.resolver';
@@ -38,10 +35,8 @@ export const mapWeatherRoutes: Routes = [
 
 @NgModule({
   imports: [
-      CommonModule,
       ReactiveFormsModule,
       FormsModule,
-      MatSnackBarModule,
       AngularFirestoreModule,
       RouterModule.forChild(mapWeatherRoutes)
   ],
