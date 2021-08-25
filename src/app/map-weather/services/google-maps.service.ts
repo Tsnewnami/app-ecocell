@@ -72,7 +72,7 @@ export class GoogleMapsService {
     });
   }
 
-  initMap(targetElementMap: HTMLElement, targetElementSearchBox: HTMLInputElement){
+  initMap(targetElementMap: HTMLElement, targetElementSearchBox: HTMLInputElement, polygons: Polygon[]){
     this.initLoader();
     this.loader.load().then(() => {
     this.map = new google.maps.Map(targetElementMap, {
@@ -115,6 +115,10 @@ export class GoogleMapsService {
       this.initDrawingTools();
       this.drawingTools.setMap(this.map);
       this.setPolygonListener();
+      this.polygons = polygons;
+      this.polygons.forEach(polygon => {
+        this.createPolygon(polygon);
+      })
     })
   }
 

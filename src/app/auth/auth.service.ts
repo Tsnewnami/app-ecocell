@@ -9,6 +9,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { EmailVerificationComponent } from './email-verification/email-verification.component';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
+import  firebase  from 'firebase/app';
+
 
 @Injectable({
   providedIn: 'root'
@@ -23,28 +25,31 @@ export class AuthService {
     private dialog: MatDialog,
     private router: Router) { }
 
-  login(email: string, password: string){
+  async login(email: string, password: string){
     this.isLoading.next(true);
-    this.auth.signInWithEmailAndPassword(
-      email,
-      password
-    ).then(result => {
+    this.auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(
+      () =>
+      this.auth.signInWithEmailAndPassword(
+        email,
+        password
+      ).then(result => {
 
-      const userAction: User = {id: result.user.uid, email: result.user.email}
+        const userAction: User = {id: result.user.uid, email: result.user.email}
 
-      if(!result.user.emailVerified)
-      {
-        this.snackBar.open(`Error: Please verify your email address ${result.user.email}`, null, {duration :6000});
-        return;
-      }
+        if(!result.user.emailVerified)
+        {
+          this.snackBar.open(`Error: Please verify your email address ${result.user.email}`, null, {duration :6000});
+          return;
+        }
 
-      this.store.dispatch(login({user: userAction}));
-      this.isLoading.next(false);
-      this.router.navigate(['/app']);
-    })
-    .catch(err => {
-      this.snackBar.open(err.message, null, {duration :6000});
-    })
+        this.store.dispatch(login({user: userAction}));
+        this.isLoading.next(false);
+        this.router.navigate(['/app']);
+      })
+      .catch(err => {
+        this.snackBar.open(err.message, null, {duration :6000});
+      })
+    );
   }
 
   signup(email: string, password: string) {

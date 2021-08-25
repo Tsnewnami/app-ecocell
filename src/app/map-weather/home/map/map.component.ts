@@ -1,6 +1,10 @@
+import { Observable } from 'rxjs';
+import { PolygonEntityService } from './../../services/polygon-entity.service';
 import { GoogleMapsPolygonService } from './../../services/google-maps-polygon.service';
 import { GoogleMapsService } from '../../services/google-maps.service';
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Polygon } from '../../models/polygon.model';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-map',
@@ -10,27 +14,28 @@ import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angula
 export class MapComponent implements OnInit {
   @ViewChild('map', {read: ElementRef, static: true}) mapElement: ElementRef<HTMLElement>;
   @ViewChild('pacinput', {read: ElementRef, static: true}) searchBoxElement: ElementRef<HTMLInputElement>;
+  polygons$: Observable<Polygon[]>;
+  private polygons: Polygon[]
+
   constructor(
     private googleMapsService: GoogleMapsService,
-    private googleMapsPolygonService: GoogleMapsPolygonService
+    private googleMapsPolygonService: GoogleMapsPolygonService,
+    private polygonEntityService: PolygonEntityService
   ) { }
 
   ngOnInit(){
-    this.googleMapsService.initMap(this.mapElement.nativeElement, this.searchBoxElement.nativeElement);
-    this.googleMapsService.polygonAvailableCheck()
-        .subscribe(loaded => {
-          if (loaded) {
-            console.log('Attempting to load polygon data');
-            this.googleMapsService.fetchAllAvailablePolygonsForUser(true);
-          } else {
-            return;
-          }
-        })
+    this.polygons$ = this.polygonEntityService.entities$
+    this.polygons$
+      .subscribe(polygons => {
+        this.polygons = polygons as Polygon[];
+      })
 
+    this.googleMapsService.initMap(this.mapElement.nativeElement, this.searchBoxElement.nativeElement, this.polygons);
   }
 
   drawPolygon() {
     this.googleMapsPolygonService.initPolygonEvent();
+    console.log(this.polygons$);
   }
 
   finishPolygon() {

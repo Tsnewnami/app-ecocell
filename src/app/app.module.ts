@@ -9,20 +9,17 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthModule } from './auth/auth.module';
 import { RouterModule, Routes } from '@angular/router';
 import { StoreModule } from '@ngrx/store';
+
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
-import { HomeComponent } from './map-weather/home/home.component';
 import { MapWeatherModule } from './map-weather/map-weather.module';
 import { AngularFireModule } from '@angular/fire';
 import { EffectsModule } from '@ngrx/effects';
-import { AuthGuard } from './auth/auth.guard';
+import { EntityDataModule } from '@ngrx/data';
+import { HttpClientModule } from '@angular/common/http';
+import { PolygonsResolver } from './map-weather/services/polygons.resolver';
 
 const routes: Routes = [
-  {
-    path: 'app',
-    component: HomeComponent,
-    canActivate: [AuthGuard]
-  },
   {
     path: '**',
     redirectTo: '/'
@@ -39,6 +36,7 @@ const routes: Routes = [
     BrowserAnimationsModule,
     MaterialModule,
     FlexLayoutModule,
+    HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
     AuthModule.forRoot(),
@@ -48,8 +46,9 @@ const routes: Routes = [
     MapWeatherModule.forRoot(),
     AngularFireModule.initializeApp(environment.firebase),
     EffectsModule.forRoot([]),
+    EntityDataModule.forRoot({}),
   ],
-  providers: [],
+  providers: [PolygonsResolver],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
