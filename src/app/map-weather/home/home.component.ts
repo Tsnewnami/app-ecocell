@@ -1,5 +1,7 @@
+import { PolygonEntityService } from './../services/polygon-entity.service';
 import { Component, OnInit } from '@angular/core';
-import { Loader } from '@googlemaps/js-api-loader';
+import { Observable } from 'rxjs';
+import { Polygon } from '../models/polygon.model';
 
 @Component({
   selector: 'app-home',
@@ -7,11 +9,12 @@ import { Loader } from '@googlemaps/js-api-loader';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+  polygons$: Observable<Polygon[]>;
 
-  constructor() { }
+  constructor(private polygonEntityService: PolygonEntityService) { }
 
   ngOnInit(): void {
-
+    this.polygons$ = this.polygonEntityService.entities$
   }
 
 }

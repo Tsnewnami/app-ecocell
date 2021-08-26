@@ -1,25 +1,32 @@
+import { PolygonEntityService } from './polygon-entity.service';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Polygon } from './../models/polygon.model';
+import { Polygon, RenderedPolygon } from './../models/polygon.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Injectable } from '@angular/core';
 import { Loader } from '@googlemaps/js-api-loader';
 import { environment } from 'src/environments/environment';
-import { map } from 'rxjs/operators';
-import { Subject, Observable } from 'rxjs';
+import { Subject } from 'rxjs';
+import { CropType } from '../models/croptype.enum';
+
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class GoogleMapsService {
   private loader: Loader;
+  private polygons: Polygon[] = [];
+  private currentCropType: CropType;
+  private renderedPolygons: RenderedPolygon[] = []
+
   map: google.maps.Map;
   drawingTools: google.maps.drawing.DrawingManager;
-  private polygons: Polygon[] = [];
   polygonsChanged = new Subject<Polygon[]>();
 
   constructor(
     private snackBar: MatSnackBar,
-    private fireStore: AngularFirestore
+    private fireStore: AngularFirestore,
+    private polygonEntityService: PolygonEntityService
   ) {}
 
   private initLoader(){
@@ -59,15 +66,19 @@ export class GoogleMapsService {
         const newPoly:Polygon = {
           index: index,
           userId: userId,
-          name: 'Corn' + index.toString(),
+          name: this.currentCropType + " " + index.toString(),
           lat: coords[0],
           long: coords[1]
         }
 
 
         this.polygons.push(newPoly);
-        this.polygonsChanged.next([...this.polygons]);
-        this.pushPolygonToDb(newPoly);
+        this.renderedPolygons.push({
+          index: index,
+          polygon: polygon
+        });
+        // this.polygonsChanged.next([...this.polygons]);
+        // this.pushPolygonToDb(newPoly);
       }
     });
   }
@@ -78,10 +89,11 @@ export class GoogleMapsService {
     this.map = new google.maps.Map(targetElementMap, {
         center: {lat: -25.861078, lng: 134.598730},
         zoom: 5,
+        streetViewControl: false,
     });
 
     const searchBox = new google.maps.places.SearchBox(targetElementSearchBox);
-    this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(targetElementSearchBox);
+    this.map.controls[google.maps.ControlPosition.TOP_CENTER].push(targetElementSearchBox);
     // Bias the SearchBox results towards current map's viewport.
     this.map.addListener("bounds_changed", () => {
       searchBox.setBounds(this.map.getBounds() as google.maps.LatLngBounds);
@@ -117,13 +129,15 @@ export class GoogleMapsService {
       this.setPolygonListener();
       this.polygons = polygons;
       this.polygons.forEach(polygon => {
-        this.createPolygon(polygon);
+        this.createPolygon(polygon, polygon.index);
       })
     })
   }
 
-  panTo(ltLng: google.maps.LatLng){
+  panTo(lat: number, long: number){
+    const ltLng = new google.maps.LatLng(lat, long);
     this.map.panTo(ltLng);
+    this.map.setZoom(8);
   }
 
   private convertMvcToArray(pathArray) {
@@ -137,61 +151,11 @@ export class GoogleMapsService {
     return [lat, long];
   }
 
-  polygonAvailableCheck(): Observable<boolean> {
-    var loaded = new Subject<boolean>();
-    const userId = JSON.parse(localStorage.getItem('user'))['id'];
-    this.fireStore.collection('userPolygons').doc(userId).collection('polygons')
-      .get()
-      .subscribe((docData) => {
-        if (!docData.empty) {
-          console.log("Polygon data available");
-          loaded.next(true);
-        } else {
-          console.log("Polygon data not available");
-          loaded.next(false);
-      }
-    }, error =>{
-      console.log(error);
-    });
-
-    return loaded.asObservable();
-  }
-
- fetchAllAvailablePolygonsForUser(freshLogin?: boolean) {
-    const userId = JSON.parse(localStorage.getItem('user'))['id'];
-    this.fireStore.collection('userPolygons').doc(userId).collection('polygons')
-    .snapshotChanges()
-    .pipe(map( docArray => {
-      return docArray.map( doc => {
-        return(
-           {
-            index: doc.payload.doc.data()['index'],
-            userId: doc.payload.doc.data()['userId'],
-            name: doc.payload.doc.data()['name'],
-            lat: doc.payload.doc.data()['lat'],
-            long: doc.payload.doc.data()['long'],
-         }
-      );
-      });
-    }))
-    .subscribe((polygonsDb: Polygon[]) => {
-      if (freshLogin){
-        polygonsDb.forEach((polygon) => this.createPolygon(polygon));
-      }
-      this.polygons = polygonsDb;
-      this.polygonsChanged.next([...this.polygons]);
-    }, error => {
-      this.snackBar.open(`Failed to fetch polygons. Please try again later.`, null, {
-        duration: 6000
-      })
-    })
-  }
-
   pushPolygonToDb(polygon: Polygon) {
     this.fireStore.collection('userPolygons').doc(polygon.userId).collection('polygons').doc(polygon.name).set(polygon);
   }
 
-  createPolygon(polygon: Polygon) {
+  createPolygon(polygon: Polygon, index: number) {
     var paths = []
     for (let i = 0; i < polygon.lat.length; i++) {
       const gData = new google.maps.LatLng(polygon.lat[i], polygon.long[i]);
@@ -208,6 +172,60 @@ export class GoogleMapsService {
     })
 
     poly.setMap(this.map)
+
+    this.renderedPolygons.push({
+      index: index,
+      polygon: poly
+    });
+  }
+
+  deletePolygon(index: number){
+    // console.log(index);
+    // if(index == this.renderedPolygons.length){
+    //   this.renderedPolygons[index].polygon.setMap(null);
+    //   this.renderedPolygons.splice(index-1, 1);
+    //   this.polygons.splice(index-1, 1);
+    // } else {
+    //   console.log("hello");
+    //   for (let i = index; i < this.renderedPolygons.length; i++) {
+    //     var indexObj = this.renderedPolygons[i].index;
+    //     console.log(this.renderedPolygons[i].index)
+    //     Object.defineProperties(this.renderedPolygons[i], {
+    //       index: {
+    //         value: indexObj - 1,
+    //         writable: true,
+    //         configurable: true,
+    //       }
+    //     });
+
+    //     this.polygonEntityService.;
+    //   }
+    // }
+
+  }
+
+  setCurrentCropType(cropType: string){
+    switch(cropType) {
+      case "corn": {
+        this.currentCropType = CropType.Corn;
+        break;
+      }
+      case "wheat": {
+        this.currentCropType = CropType.Wheat;
+        break;
+      }
+      case "sorghum": {
+        this.currentCropType = CropType.Sorghum;
+        break;
+      }
+      case "barley": {
+        this.currentCropType = CropType.Barley;
+        break;
+      }
+      default: {
+        break;
+      }
+    }
   }
 
 }

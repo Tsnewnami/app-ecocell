@@ -6,6 +6,7 @@ import { Polygon } from '../models/polygon.model';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { map } from 'rxjs/operators';
 
+
 @Injectable()
 export class PolygonsDataService extends DefaultDataService<Polygon>{
 

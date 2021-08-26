@@ -1,0 +1,12 @@
+<mat-selection-list #polygons_ [multiple]="false">
+  <mat-list-option *ngFor="let polygon of polygons" [value]="polygon">
+    <div style="display:flex; justify-content:space-between;align-items:center">
+    <a (click)="onPolyClick(polygon.lat, polygon.long)">{{polygon.name}}</a>
+    <div>
+      <button mat-icon-button>
+        <mat-icon (click)="onClearPolygon(polygon.index)">clear</mat-icon>
+      </button>
+    </div>
+  </div>
+  </mat-list-option>
+</mat-selection-list>

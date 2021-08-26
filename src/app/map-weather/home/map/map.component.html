@@ -1,15 +1,23 @@
 <input
-id="pac-input"
-class="controls"
-type="text"
-placeholder="Search Farm Location"
-ngModel
-#pacinput
-name="pacinput"
+  id="pac-input"
+  class="controls"
+  type="text"
+  placeholder="Search For Farm Location"
+  ngModel
+  #pacinput
+  name="pacinput"
 />
 <div class="map-screen" id="map" ngModel #map>
 
 </div>
-<button (click)="drawPolygon()">Draw Polygon</button>
-<button (click)="finishPolygon()">Finish Drawing Polygon</button>
-
+<button mat-raised-button color="primary"(click)="drawPolygon()" [disabled]="!polygonButtonsEnabled">Draw Polygon</button>
+<button mat-raised-button color="primary"(click)="finishPolygon()" [disabled]="!polygonButtonsEnabled">Finish Drawing Polygon</button>
+<mat-form-field appearance="fill">
+  <mat-label>Select Crop Type</mat-label>
+  <mat-select  (selectionChange)="setCropType($event)">
+    <mat-option value="corn">Corn</mat-option>
+    <mat-option value="wheat">Wheat</mat-option>
+    <mat-option value="sorgum">Sorghum</mat-option>
+    <mat-option value="barley">Barley</mat-option>
+  </mat-select>
+</mat-form-field>

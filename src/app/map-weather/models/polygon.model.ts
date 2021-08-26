@@ -4,7 +4,12 @@ export interface Polygon{
   name: string;
   lat: number[];
   long: number[];
-  dialog?: google.maps.InfoWindow;
+  polygon?: google.maps.Polygon
+}
+
+export interface RenderedPolygon{
+  index: number;
+  polygon: google.maps.Polygon
 }
 
 export function comparePolygons(p1:Polygon, p2:Polygon) {

@@ -21,10 +21,9 @@ export class PolygonsResolver implements Resolve<boolean>{
       .pipe(
         tap(loaded => {
           if (!loaded){
-          setTimeout(() =>
-          {
-            this.polygonService.getAll();
-          }, 52);
+            setTimeout(() => {
+              this.polygonService.getAll();
+            }, 120);
           }
         }),
         filter(loaded => !!loaded), // Ensures only completes if the courses are loaded

@@ -1,4 +1,5 @@
 import { PolygonEntityService } from './services/polygon-entity.service';
+import { CommonModule } from '@angular/common';
 import { EntityDataService, EntityDefinitionService, EntityMetadataMap } from '@ngrx/data';
 import { GoogleMapsService } from '../map-weather/services/google-maps.service';
 import { HomeComponent } from './home/home.component';
@@ -11,6 +12,14 @@ import { AuthGuard } from '../auth/auth.guard';
 import { PolygonsResolver } from './services/polygons.resolver';
 import { PolygonsDataService } from './services/polygons-data.service';
 import { comparePolygons, Polygon } from './models/polygon.model';
+
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
+import { MatButtonModule } from '@angular/material/button';
+import { PolygonListComponent } from './home/map/polygon-list/polygon-list.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatIconModule } from '@angular/material/icon';
 
 
 const entityMetaData :EntityMetadataMap = {
@@ -35,13 +44,22 @@ export const mapWeatherRoutes: Routes = [
 
 @NgModule({
   imports: [
+      CommonModule,
       ReactiveFormsModule,
       FormsModule,
       AngularFirestoreModule,
-      RouterModule.forChild(mapWeatherRoutes)
+      RouterModule.forChild(mapWeatherRoutes),
+      MatSidenavModule,
+      MatButtonModule,
+      MatListModule,
+      MatFormFieldModule,
+      MatSelectModule,
+      MatIconModule
   ],
-  declarations: [HomeComponent, MapComponent],
-  exports: [HomeComponent]
+  declarations: [HomeComponent, MapComponent, PolygonListComponent],
+  exports: [
+    HomeComponent,
+  ]
 })
 
 export class MapWeatherModule {
