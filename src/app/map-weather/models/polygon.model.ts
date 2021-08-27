@@ -4,7 +4,7 @@ export interface Polygon{
   name: string;
   lat: number[];
   long: number[];
-  polygon?: google.maps.Polygon
+  fillColor: string;
 }
 
 export interface RenderedPolygon{

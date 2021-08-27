@@ -38,24 +38,6 @@ export class MapComponent implements OnInit {
       this.polygonButtonsEnabled = true;
     }
 
-    switch(event.value){
-      case "corn": {
-        this.googleMapsPolygonService.setPolygonColourOptions("#dbdb07")
-        break;
-      }
-      case "wheat": {
-        this.googleMapsPolygonService.setPolygonColourOptions("#00ba1f")
-        break;
-      }
-      case "sorgum": {
-        this.googleMapsPolygonService.setPolygonColourOptions("#00457d")
-        break;
-      }
-      default: {
-        break;
-      }
-    }
-
     this.googleMapsService.setCurrentCropType(event.value)
   }
 

@@ -20,11 +20,4 @@ export class GoogleMapsPolygonService {
       this.googleMapsService.drawingTools.setDrawingMode(null);
     }
 
-    setPolygonColourOptions(fillColourHex: string) {
-      this.googleMapsService.drawingTools.setOptions({
-        polygonOptions: {editable:false,fillColor:fillColourHex, strokeColor:'#000000',strokeWeight:2}
-      });
-    }
-
-
 }

@@ -15,8 +15,9 @@ import { CropType } from '../models/croptype.enum';
 })
 export class GoogleMapsService {
   private loader: Loader;
-  private polygons: Polygon[] = [];
+  // private polygons: Polygon[] = [];
   private currentCropType: CropType;
+  private currentCropColor: string;
   private renderedPolygons: RenderedPolygon[] = []
 
   map: google.maps.Map;
@@ -62,23 +63,25 @@ export class GoogleMapsService {
       } else{
         const userId = JSON.parse(localStorage.getItem('user'))['id'];
         var coords = this.convertMvcToArray(polygon.getPath());
-        var index = this.polygons.length;
+        const genRanHex = size => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
+        const index = Math.round(new Date().getTime() / 1000);
         const newPoly:Polygon = {
           index: index,
           userId: userId,
-          name: this.currentCropType + " " + index.toString(),
+          name: this.currentCropType + " ID: " + genRanHex(4),
           lat: coords[0],
-          long: coords[1]
+          long: coords[1],
+          fillColor: this.currentCropColor
         }
 
 
-        this.polygons.push(newPoly);
+        // this.polygons.push(newPoly);
         this.renderedPolygons.push({
           index: index,
           polygon: polygon
         });
         // this.polygonsChanged.next([...this.polygons]);
-        // this.pushPolygonToDb(newPoly);
+        this.pushPolygonToDb(newPoly);
       }
     });
   }
@@ -127,8 +130,8 @@ export class GoogleMapsService {
       this.initDrawingTools();
       this.drawingTools.setMap(this.map);
       this.setPolygonListener();
-      this.polygons = polygons;
-      this.polygons.forEach(polygon => {
+      // this.polygons = polygons;
+      polygons.forEach(polygon => {
         this.createPolygon(polygon, polygon.index);
       })
     })
@@ -164,10 +167,10 @@ export class GoogleMapsService {
 
     const poly = new google.maps.Polygon({
       paths: paths,
-      strokeColor: "#fcba03",
+      strokeColor: "#000000",
       strokeOpacity: 0.8,
       strokeWeight: 3,
-      fillColor: "#FF0000",
+      fillColor: polygon.fillColor,
       fillOpacity: 0.35
     })
 
@@ -180,46 +183,48 @@ export class GoogleMapsService {
   }
 
   deletePolygon(index: number){
-    // console.log(index);
-    // if(index == this.renderedPolygons.length){
-    //   this.renderedPolygons[index].polygon.setMap(null);
-    //   this.renderedPolygons.splice(index-1, 1);
-    //   this.polygons.splice(index-1, 1);
-    // } else {
-    //   console.log("hello");
-    //   for (let i = index; i < this.renderedPolygons.length; i++) {
-    //     var indexObj = this.renderedPolygons[i].index;
-    //     console.log(this.renderedPolygons[i].index)
-    //     Object.defineProperties(this.renderedPolygons[i], {
-    //       index: {
-    //         value: indexObj - 1,
-    //         writable: true,
-    //         configurable: true,
-    //       }
-    //     });
-
-    //     this.polygonEntityService.;
-    //   }
-    // }
-
+   for (let i = 0; i < this.renderedPolygons.length; i++) {
+     if(this.renderedPolygons[i].index == index) {
+        this.renderedPolygons[i].polygon.setMap(null);
+        this.renderedPolygons[i] = null;
+        // this.polygons.splice(i, 1);
+     }
+   }
   }
+
 
   setCurrentCropType(cropType: string){
     switch(cropType) {
       case "corn": {
         this.currentCropType = CropType.Corn;
+        this.drawingTools.setOptions({
+          polygonOptions: {editable:false,fillColor:"#dbdb07", strokeColor:'#000000',strokeWeight:2}
+        });
+        this.currentCropColor = "#dbdb07";
         break;
       }
       case "wheat": {
         this.currentCropType = CropType.Wheat;
+        this.drawingTools.setOptions({
+          polygonOptions: {editable:false,fillColor:"#00ba1f", strokeColor:'#000000',strokeWeight:2}
+        });
+        this.currentCropColor = "#00ba1f";
         break;
       }
       case "sorghum": {
         this.currentCropType = CropType.Sorghum;
+        this.drawingTools.setOptions({
+          polygonOptions: {editable:false,fillColor:"#00457d", strokeColor:'#000000',strokeWeight:2}
+        });
+        this.currentCropColor = "#00457d";
         break;
       }
       case "barley": {
         this.currentCropType = CropType.Barley;
+        this.drawingTools.setOptions({
+          polygonOptions: {editable:false,fillColor:"#680b8c", strokeColor:'#000000',strokeWeight:2}
+        });
+        this.currentCropColor = "#680b8c";
         break;
       }
       default: {

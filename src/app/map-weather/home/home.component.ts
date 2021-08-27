@@ -1,19 +1,25 @@
 import { PolygonEntityService } from './../services/polygon-entity.service';
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { map, Observable } from 'rxjs';
 import { Polygon } from '../models/polygon.model';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent implements OnInit {
   polygons$: Observable<Polygon[]>;
+  private polygons: Polygon[] = []
 
   constructor(private polygonEntityService: PolygonEntityService) { }
 
   ngOnInit(): void {
+    this.reload();
+  }
+
+  reload() {
     this.polygons$ = this.polygonEntityService.entities$
   }
 

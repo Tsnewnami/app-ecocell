@@ -1,7 +1,8 @@
 <mat-drawer-container class="example-container">
   <mat-drawer mode="side" opened>
     <h1>Farm: Test Farm</h1>
-    <app-polygon-list [polygons]="polygons$ | async">
+    <app-polygon-list (polygonChanged)="reload()"
+      [polygons]="polygons$ | async">
 
     </app-polygon-list>
   </mat-drawer>
