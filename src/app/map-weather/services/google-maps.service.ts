@@ -155,6 +155,7 @@ export class GoogleMapsService {
   }
 
   pushPolygonToDb(polygon: Polygon) {
+    console.log(polygon);
     this.fireStore.collection('userPolygons').doc(polygon.userId).collection('polygons').doc(polygon.name).set(polygon);
   }
 
@@ -187,7 +188,7 @@ export class GoogleMapsService {
      if(this.renderedPolygons[i].index == index) {
         this.renderedPolygons[i].polygon.setMap(null);
         this.renderedPolygons[i] = null;
-        // this.polygons.splice(i, 1);
+        this.renderedPolygons.splice(i, 1);
      }
    }
   }
