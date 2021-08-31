@@ -5,6 +5,7 @@ export interface Polygon{
   lat: number[];
   long: number[];
   fillColor: string;
+  polygonApiId: string
 }
 
 export interface RenderedPolygon{

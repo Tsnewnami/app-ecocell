@@ -12,6 +12,7 @@ export class PolygonsResolver implements Resolve<boolean>{
   constructor(
     private polygonService: PolygonEntityService,
     private auth: AngularFireAuth) {
+
   }
 
   resolve(route: ActivatedRouteSnapshot,

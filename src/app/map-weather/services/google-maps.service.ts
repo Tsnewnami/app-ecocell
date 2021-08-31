@@ -1,4 +1,4 @@
-import { PolygonEntityService } from './polygon-entity.service';
+import { PaddockApiService } from './paddock-api.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Polygon, RenderedPolygon } from './../models/polygon.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -8,14 +8,11 @@ import { environment } from 'src/environments/environment';
 import { Subject } from 'rxjs';
 import { CropType } from '../models/croptype.enum';
 
-
-
 @Injectable({
   providedIn: 'root'
 })
 export class GoogleMapsService {
   private loader: Loader;
-  // private polygons: Polygon[] = [];
   private currentCropType: CropType;
   private currentCropColor: string;
   private renderedPolygons: RenderedPolygon[] = []
@@ -27,7 +24,7 @@ export class GoogleMapsService {
   constructor(
     private snackBar: MatSnackBar,
     private fireStore: AngularFirestore,
-    private polygonEntityService: PolygonEntityService
+    private paddockSerivce: PaddockApiService,
   ) {}
 
   private initLoader(){
@@ -65,28 +62,18 @@ export class GoogleMapsService {
         var coords = this.convertMvcToArray(polygon.getPath());
         const genRanHex = size => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
         const index = Math.round(new Date().getTime() / 1000);
-        const newPoly:Polygon = {
-          index: index,
-          userId: userId,
-          name: this.currentCropType + " ID: " + genRanHex(4),
-          lat: coords[0],
-          long: coords[1],
-          fillColor: this.currentCropColor
-        }
+        const name = this.currentCropType + " ID: " + genRanHex(4);
 
-
-        // this.polygons.push(newPoly);
         this.renderedPolygons.push({
           index: index,
           polygon: polygon
         });
-        // this.polygonsChanged.next([...this.polygons]);
-        this.pushPolygonToDb(newPoly);
+        this.pushPolygonToDb(index, userId, name , coords[0], coords[1], this.currentCropColor);
       }
     });
   }
 
-  initMap(targetElementMap: HTMLElement, targetElementSearchBox: HTMLInputElement, polygons: Polygon[]){
+  initMap(targetElementMap: HTMLElement, targetElementSearchBox: HTMLInputElement, polygons?: Polygon[]){
     this.initLoader();
     this.loader.load().then(() => {
     this.map = new google.maps.Map(targetElementMap, {
@@ -131,16 +118,18 @@ export class GoogleMapsService {
       this.drawingTools.setMap(this.map);
       this.setPolygonListener();
       // this.polygons = polygons;
-      polygons.forEach(polygon => {
-        this.createPolygon(polygon, polygon.index);
-      })
+      if(polygons) {
+        polygons.forEach(polygon => {
+          this.createPolygon(polygon, polygon.index);
+        })
+      }
     })
   }
 
   panTo(lat: number, long: number){
     const ltLng = new google.maps.LatLng(lat, long);
     this.map.panTo(ltLng);
-    this.map.setZoom(8);
+    this.map.setZoom(15);
   }
 
   private convertMvcToArray(pathArray) {
@@ -154,9 +143,21 @@ export class GoogleMapsService {
     return [lat, long];
   }
 
-  pushPolygonToDb(polygon: Polygon) {
-    console.log(polygon);
-    this.fireStore.collection('userPolygons').doc(polygon.userId).collection('polygons').doc(polygon.name).set(polygon);
+  pushPolygonToDb(index: number, userId: string, name: string, lat: number[], long: number[], fillColor: string) {
+    this.paddockSerivce.createPolygon(name, long, lat)
+        .subscribe(res => {
+          const polygon: Polygon = {
+            index: index,
+            userId: userId,
+            name: name,
+            lat: lat,
+            long: long,
+            fillColor: fillColor,
+            polygonApiId: res.toString(),
+          }
+
+          this.fireStore.collection('userPolygons').doc(userId).collection('polygons').doc(name).set(polygon);
+        })
   }
 
   createPolygon(polygon: Polygon, index: number) {
@@ -192,7 +193,6 @@ export class GoogleMapsService {
      }
    }
   }
-
 
   setCurrentCropType(cropType: string){
     switch(cropType) {
