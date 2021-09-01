@@ -5,3 +5,10 @@ mat-drawer {
   width: 20vw;
   border: 1px solid black;
 }
+
+.paddock-details-div {
+  margin-left: 20vw;
+  width: 100vw;
+  height: 20vh;
+  border: 1px solid black;
+}

@@ -36,7 +36,9 @@ export class MapComponent implements OnInit {
   setCropType(event) {
     if(!this.polygonButtonsEnabled){
       this.polygonButtonsEnabled = true;
+      this.googleMapsService.setDrawingTools();
     }
+
 
     this.googleMapsService.setCurrentCropType(event.value)
   }

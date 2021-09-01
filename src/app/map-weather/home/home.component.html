@@ -1,10 +1,22 @@
 <mat-drawer-container class="example-container">
   <mat-drawer mode="side" opened>
     <h1>Farm: Test Farm</h1>
-    <app-polygon-list (polygonChanged)="reload()"
+    <app-polygon-list
+      (polygonSelected)="selectedPolygon = $event"
+      (polygonChanged)="reload()"
+      (polygonDeleted)="selectedPolygon = null"
       [polygons]="polygons$ | async">
 
     </app-polygon-list>
   </mat-drawer>
   <mat-drawer-content><app-map></app-map></mat-drawer-content>
 </mat-drawer-container>
+<div class="paddock-details-div">
+  <app-paddock-details
+      *ngIf="selectedPolygon; else infoText"
+      [polygon]="selectedPolygon"></app-paddock-details>
+    <ng-template #infoText>
+      <h1>Please select a Paddock to show it's details !</h1>
+    </ng-template>
+</div>
+

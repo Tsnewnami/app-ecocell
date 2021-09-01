@@ -1,7 +1,7 @@
 <mat-selection-list #polygons_ [multiple]="false">
   <mat-list-option *ngFor="let polygon of polygons" [value]="polygon">
     <div style="display:flex; justify-content:space-between;align-items:center">
-    <button (click)="onPolyClick(polygon.lat, polygon.long)">{{polygon.name}}</button>
+    <button (click)="onPolyClick(polygon)">{{polygon.name}}</button>
     <div>
       <button mat-icon-button>
         <mat-icon (click)="onClearPolygon(polygon)">clear</mat-icon>

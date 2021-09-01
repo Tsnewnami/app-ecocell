@@ -20,6 +20,11 @@ import { PolygonListComponent } from './home/map/polygon-list/polygon-list.compo
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
+import { PaddockDetailsComponent } from './home/map/paddock-details/paddock-details.component';
+import { comparePaddock, Paddock } from './models/paddock.model';
+import { PaddockEntityService } from './services/paddock-entity.service';
+import { PaddockApiService } from './services/paddock-api.service';
+import { PaddockDataService } from './services/paddock-data.service';
 
 
 const entityMetaData :EntityMetadataMap = {
@@ -28,7 +33,12 @@ const entityMetaData :EntityMetadataMap = {
     selectId: (polygon: Polygon) => polygon.index
   },
   Event: {
+  },
+  Paddock: {
+    sortComparer: comparePaddock,
+    selectId: (paddock: Paddock) => paddock.index
   }
+
 };
 
 export const mapWeatherRoutes: Routes = [
@@ -56,7 +66,7 @@ export const mapWeatherRoutes: Routes = [
       MatSelectModule,
       MatIconModule
   ],
-  declarations: [HomeComponent, MapComponent, PolygonListComponent],
+  declarations: [HomeComponent, MapComponent, PolygonListComponent, PaddockDetailsComponent],
   exports: [
     HomeComponent,
   ]
@@ -68,9 +78,12 @@ export class MapWeatherModule {
           ngModule: MapWeatherModule,
           providers: [
             GoogleMapsService,
+            PaddockApiService,
             PolygonEntityService,
             PolygonsResolver,
-            PolygonsDataService
+            PolygonsDataService,
+            PaddockEntityService,
+            PaddockDataService,
           ]
       }
   }

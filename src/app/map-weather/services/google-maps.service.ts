@@ -34,17 +34,35 @@ export class GoogleMapsService {
     });
   }
 
-  private initDrawingTools(){
+  initDrawingTools(){
+    if (this.drawingTools != null) {
+      this.drawingTools.setMap(null);
+    }
+
     this.drawingTools = new google.maps.drawing.DrawingManager({
       drawingControl: true,
       drawingControlOptions: {
-        position: google.maps.ControlPosition.BOTTOM_CENTER,
         drawingModes: [
           google.maps.drawing.OverlayType.POLYGON,
         ],
       },
       polygonOptions: {editable:false,fillColor:'#ff0000',strokeColor:'#ff0000',strokeWeight:2}
     });
+
+    this.drawingTools.setMap(this.map);
+    this.drawingTools.setOptions({drawingControl:false});
+  }
+
+  setDrawingTools() {
+    this.drawingTools.setMap(this.map);
+  }
+
+  setCancelDrawingListener() {
+    google.maps.event.addListener(this.map, 'rightclick', () => {
+      this.initDrawingTools();
+      this.setPolygonListener();
+      this.setCurrentCropType(this.currentCropType);
+    })
   }
 
   setPolygonListener(){
@@ -68,7 +86,7 @@ export class GoogleMapsService {
           index: index,
           polygon: polygon
         });
-        this.pushPolygonToDb(index, userId, name , coords[0], coords[1], this.currentCropColor);
+        this.pushPolygonToDb(index, userId, name , coords[0], coords[1], this.currentCropColor, polyAreaHa);
       }
     });
   }
@@ -115,9 +133,10 @@ export class GoogleMapsService {
     });
 
       this.initDrawingTools();
-      this.drawingTools.setMap(this.map);
+      // this.drawingTools.setMap(this.map);
       this.setPolygonListener();
-      // this.polygons = polygons;
+      this.setCancelDrawingListener();
+      this.drawingTools.setOptions({drawingControl:false});
       if(polygons) {
         polygons.forEach(polygon => {
           this.createPolygon(polygon, polygon.index);
@@ -143,21 +162,36 @@ export class GoogleMapsService {
     return [lat, long];
   }
 
-  pushPolygonToDb(index: number, userId: string, name: string, lat: number[], long: number[], fillColor: string) {
-    this.paddockSerivce.createPolygon(name, long, lat)
-        .subscribe(res => {
-          const polygon: Polygon = {
-            index: index,
-            userId: userId,
-            name: name,
-            lat: lat,
-            long: long,
-            fillColor: fillColor,
-            polygonApiId: res.toString(),
-          }
+  pushPolygonToDb(index: number, userId: string, name: string, lat: number[], long: number[], fillColor: string, polyArea: number) {
+    // this.paddockSerivce.createPolygon(name, long, lat)
+    //     .subscribe(res => {
+    //       const polygon: Polygon = {
+    //         index: index,
+    //         userId: userId,
+    //         name: name,
+    //         lat: lat,
+    //         long: long,
+    //         fillColor: fillColor,
+    //         // polygonApiId: res.toString(),
+    //         polygonApiId: "TEST"
+    //       }
 
-          this.fireStore.collection('userPolygons').doc(userId).collection('polygons').doc(name).set(polygon);
-        })
+    //       this.fireStore.collection('userPolygons').doc(userId).collection('polygons').doc(name).set(polygon);
+    //     })
+
+        const polygon: Polygon = {
+          index: index,
+          userId: userId,
+          name: name,
+          lat: lat,
+          long: long,
+          fillColor: fillColor,
+          // polygonApiId: res.toString(),
+          polygonApiId: "TEST",
+          polyArea: polyArea
+        }
+
+        this.fireStore.collection('userPolygons').doc(userId).collection('polygons').doc(name).set(polygon);
   }
 
   createPolygon(polygon: Polygon, index: number) {
@@ -195,7 +229,8 @@ export class GoogleMapsService {
   }
 
   setCurrentCropType(cropType: string){
-    switch(cropType) {
+    const cropTypeLower = cropType.toLowerCase();
+    switch(cropTypeLower) {
       case "corn": {
         this.currentCropType = CropType.Corn;
         this.drawingTools.setOptions({
@@ -213,6 +248,7 @@ export class GoogleMapsService {
         break;
       }
       case "sorghum": {
+        console.log("Setting to sorghum");
         this.currentCropType = CropType.Sorghum;
         this.drawingTools.setOptions({
           polygonOptions: {editable:false,fillColor:"#00457d", strokeColor:'#000000',strokeWeight:2}

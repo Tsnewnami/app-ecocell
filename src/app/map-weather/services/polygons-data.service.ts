@@ -29,7 +29,8 @@ export class PolygonsDataService extends DefaultDataService<Polygon>{
             lat: doc.payload.doc.data()['lat'],
             long: doc.payload.doc.data()['long'],
             fillColor: doc.payload.doc.data()['fillColor'],
-            polygonApiId: doc.payload.doc.data()['polygonApiId']
+            polygonApiId: doc.payload.doc.data()['polygonApiId'],
+            polyArea: doc.payload.doc.data()['polyArea']
          }
       );
       });

@@ -10,6 +10,7 @@ import { Polygon } from '../models/polygon.model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent implements OnInit {
+  selectedPolygon: Polygon
   polygons$: Observable<Polygon[]>;
   private polygons: Polygon[] = []
 

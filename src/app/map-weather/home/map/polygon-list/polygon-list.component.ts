@@ -15,18 +15,25 @@ export class PolygonListComponent implements OnInit {
   polygons: Polygon[];
 
   @Output()
-  polygonChanged = new EventEmitter();
+  polygonChanged = new EventEmitter<void>();
+
+  @Output()
+  polygonSelected = new EventEmitter<Polygon>();
+
+  @Output()
+  polygonDeleted = new EventEmitter<void>();
 
   constructor(
     private googleMapsService: GoogleMapsService,
-    private polygonEntityService: PolygonEntityService,
-    private paddockService: PaddockApiService) { }
+    private polygonEntityService: PolygonEntityService) { }
 
   ngOnInit(): void {
 
   }
 
-  onPolyClick(lat: number[], long: number[]) {
+  onPolyClick(polygon: Polygon) {
+    const lat = polygon.lat;
+    const long = polygon.long
     const maxLat = Math.max(...lat);
     const minLat = Math.min(...lat);
     const maxLong = Math.max(...long);
@@ -35,16 +42,20 @@ export class PolygonListComponent implements OnInit {
     const latMid = minLat + ((maxLat - minLat) / 2);
     const longMid = minLong + ((maxLong - minLong) / 2);
     this.googleMapsService.panTo(latMid, longMid);
+    this.polygonSelected.emit(polygon);
   }
 
   onClearPolygon(polygon: Polygon){
     const polyIndex = polygon.index;
     this.polygonChanged.emit();
+    this.polygonDeleted.emit();
     this.googleMapsService.deletePolygon(polyIndex);
-    this.paddockService.deletePolygon(polygon.polygonApiId)
-      .subscribe(res => {
-        this.polygonEntityService.removeOneFromCache(polygon);
-        this.polygonEntityService.delete(polygon.name);
-      })
+    // this.paddockService.deletePolygon(polygon.polygonApiId)
+    //   .subscribe(res => {
+    //     this.polygonEntityService.removeOneFromCache(polygon);
+    //     this.polygonEntityService.delete(polygon.name);
+    //   })
+    this.polygonEntityService.removeOneFromCache(polygon);
+    this.polygonEntityService.delete(polygon.name);
   }
 }
