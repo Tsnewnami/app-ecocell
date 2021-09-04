@@ -12,7 +12,6 @@ import { Polygon } from '../models/polygon.model';
 export class HomeComponent implements OnInit {
   selectedPolygon: Polygon
   polygons$: Observable<Polygon[]>;
-  private polygons: Polygon[] = []
 
   constructor(private polygonEntityService: PolygonEntityService) { }
 

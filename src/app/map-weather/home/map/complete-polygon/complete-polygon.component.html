@@ -1,0 +1,26 @@
+<ol>
+  <li>
+    <h1>Name your paddock</h1>
+    <mat-form-field appearance="fill">
+      <mat-label>Name your paddock</mat-label>
+      <input matInput required #paddockName (keydown)="validation(paddockName.value)" [(ngModel)]="paddockNameC" >
+    </mat-form-field>
+    <mat-error *ngIf="duplicateFound">A paddock already exists with that name</mat-error>
+  </li>
+  <li>
+    <h2>Chose your crop type</h2>
+    <mat-form-field appearance="fill">
+      <mat-label>Select Crop Type</mat-label>
+      <mat-select #cropType>
+        <mat-option value="corn">Corn</mat-option>
+        <mat-option value="wheat">Wheat</mat-option>
+        <mat-option value="sorghum">Sorghum</mat-option>
+        <mat-option value="barley">Barley</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </li>
+  <div mat-dialog-actions>
+    <button mat-button [disabled]="duplicateFound || !paddockName.value || !cropType.value " [mat-dialog-close]="[paddockName.value, cropType.value]">Create Paddock</button>
+    <button mat-button [mat-dialog-close]="false">Cancel</button>
+  </div>
+</ol>

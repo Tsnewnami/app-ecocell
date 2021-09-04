@@ -5,11 +5,6 @@ export interface Paddock{
   polygonApiId: string;
 }
 
-export interface RenderedPolygon{
-  index: number;
-  polygon: google.maps.Polygon
-}
-
 export function comparePaddock(pD1: Paddock, pD2:Paddock) {
 
   const compare = pD1.index - pD2.index;

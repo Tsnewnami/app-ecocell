@@ -1,3 +1,6 @@
+import { CompletePolygonComponent } from './../home/map/complete-polygon/complete-polygon.component';
+import { Paddock } from './../models/paddock.model';
+import { PaddockEntityService } from './paddock-entity.service';
 import { PaddockApiService } from './paddock-api.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Polygon, RenderedPolygon } from './../models/polygon.model';
@@ -5,8 +8,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Injectable } from '@angular/core';
 import { Loader } from '@googlemaps/js-api-loader';
 import { environment } from 'src/environments/environment';
-import { Subject } from 'rxjs';
+import { map, Subject } from 'rxjs';
 import { CropType } from '../models/croptype.enum';
+import { MatDialog } from '@angular/material/dialog';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +29,8 @@ export class GoogleMapsService {
     private snackBar: MatSnackBar,
     private fireStore: AngularFirestore,
     private paddockSerivce: PaddockApiService,
+    private paddockEntityService: PaddockEntityService,
+    private dialog: MatDialog,
   ) {}
 
   private initLoader(){
@@ -66,7 +72,7 @@ export class GoogleMapsService {
   }
 
   setPolygonListener(){
-    google.maps.event.addListener(this.drawingTools,'polygoncomplete',(polygon) => {
+    google.maps.event.addListener(this.drawingTools,'polygoncomplete',(polygon: google.maps.Polygon) => {
       const haLimit = 40000000000;
       const polyAreaHa = google.maps.geometry.spherical.computeArea(polygon.getPath()) / 10000;
 
@@ -76,17 +82,33 @@ export class GoogleMapsService {
           duration: 6000
         })
       } else{
-        const userId = JSON.parse(localStorage.getItem('user'))['id'];
-        var coords = this.convertMvcToArray(polygon.getPath());
-        const genRanHex = size => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
-        const index = Math.round(new Date().getTime() / 1000);
-        const name = this.currentCropType + " ID: " + genRanHex(4);
-
-        this.renderedPolygons.push({
-          index: index,
-          polygon: polygon
+        const dialogRef = this.dialog.open(CompletePolygonComponent, {
         });
-        this.pushPolygonToDb(index, userId, name , coords[0], coords[1], this.currentCropColor, polyAreaHa);
+
+        var polyName: string;
+        var polyOptions: google.maps.PolygonOptions;
+        dialogRef.afterClosed().subscribe(async result => {
+          if (result) {
+            polyName = result[0].trim();
+            polyOptions = this.setCurrentCropType(result[1]);
+            polygon.setOptions(polyOptions);
+
+            const userId = JSON.parse(localStorage.getItem('user'))['id'];
+            var coords = this.convertMvcToArray(polygon.getPath());
+            const index = Math.round(new Date().getTime() / 1000);
+            const name = polyName;
+
+            this.renderedPolygons.push({
+              index: index,
+              polygon: polygon
+            });
+
+            this.pushPolygonToDb(index, userId, name , coords[0], coords[1], polyOptions.fillColor, polyAreaHa);
+          } else{
+            polygon.setMap(null);
+            return;
+          }
+        });
       }
     });
   }
@@ -179,20 +201,22 @@ export class GoogleMapsService {
     //       this.fireStore.collection('userPolygons').doc(userId).collection('polygons').doc(name).set(polygon);
     //     })
 
-        const polygon: Polygon = {
-          index: index,
-          userId: userId,
-          name: name,
-          lat: lat,
-          long: long,
-          fillColor: fillColor,
-          // polygonApiId: res.toString(),
-          polygonApiId: "TEST",
-          polyArea: polyArea
-        }
+    const polygon: Polygon = {
+      index: index,
+      userId: userId,
+      name: name,
+      lat: lat,
+      long: long,
+      fillColor: fillColor,
+      // polygonApiId: res.toString(),
+      polygonApiId: "TEST",
+      polyArea: polyArea
+    }
 
-        this.fireStore.collection('userPolygons').doc(userId).collection('polygons').doc(name).set(polygon);
-  }
+    this.paddockSerivce.getPaddockData("test", index, lat[0], long[0], 1, 1, 1, 1, 1)
+        .subscribe((res: Paddock) => this.paddockEntityService.addOneToCache(res));
+    this.fireStore.collection('userPolygons').doc(userId).collection('polygons').doc(name).set(polygon);
+}
 
   createPolygon(polygon: Polygon, index: number) {
     var paths = []
@@ -216,6 +240,9 @@ export class GoogleMapsService {
       index: index,
       polygon: poly
     });
+
+    this.paddockSerivce.getPaddockData("test", index, polygon.lat[0], polygon.long[0], 1, 1, 1, 1, 1)
+            .subscribe((res: Paddock) => this.paddockEntityService.addOneToCache(res));
   }
 
   deletePolygon(index: number){
@@ -229,20 +256,23 @@ export class GoogleMapsService {
   }
 
   setCurrentCropType(cropType: string){
+    var polyOptions;
     const cropTypeLower = cropType.toLowerCase();
     switch(cropTypeLower) {
       case "corn": {
         this.currentCropType = CropType.Corn;
+        polyOptions = {editable:false,fillColor:"#dbdb07", strokeColor:'#000000',strokeWeight:2};
         this.drawingTools.setOptions({
-          polygonOptions: {editable:false,fillColor:"#dbdb07", strokeColor:'#000000',strokeWeight:2}
+          polygonOptions: polyOptions
         });
         this.currentCropColor = "#dbdb07";
         break;
       }
       case "wheat": {
         this.currentCropType = CropType.Wheat;
+        polyOptions = {editable:false,fillColor:"#00ba1f", strokeColor:'#000000',strokeWeight:2};
         this.drawingTools.setOptions({
-          polygonOptions: {editable:false,fillColor:"#00ba1f", strokeColor:'#000000',strokeWeight:2}
+          polygonOptions: polyOptions
         });
         this.currentCropColor = "#00ba1f";
         break;
@@ -250,16 +280,18 @@ export class GoogleMapsService {
       case "sorghum": {
         console.log("Setting to sorghum");
         this.currentCropType = CropType.Sorghum;
+        polyOptions = {editable:false,fillColor:"#00457d", strokeColor:'#000000',strokeWeight:2};
         this.drawingTools.setOptions({
-          polygonOptions: {editable:false,fillColor:"#00457d", strokeColor:'#000000',strokeWeight:2}
+          polygonOptions: polyOptions
         });
         this.currentCropColor = "#00457d";
         break;
       }
       case "barley": {
         this.currentCropType = CropType.Barley;
+        polyOptions = {editable:false,fillColor:"#680b8c", strokeColor:'#000000',strokeWeight:2};
         this.drawingTools.setOptions({
-          polygonOptions: {editable:false,fillColor:"#680b8c", strokeColor:'#000000',strokeWeight:2}
+          polygonOptions: polyOptions
         });
         this.currentCropColor = "#680b8c";
         break;
@@ -268,6 +300,8 @@ export class GoogleMapsService {
         break;
       }
     }
+
+    return polyOptions;
   }
 
 }

@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
+import { Paddock } from '../models/paddock.model';
 
 @Injectable({
   providedIn: 'root'
@@ -8,27 +9,30 @@ import { Observable } from 'rxjs';
 export class PaddockApiService {
   constructor(private httpClient: HttpClient) { }
 
-  createPolygon(name: string, long: number[], lat: number[]): Observable<string>{
+  createPaddock(name: string, long: number[], lat: number[]): Observable<string>{
     const data = {'name': name, 'long': long, 'lat': lat };
     return this.httpClient.post('https://us-central1-app-ecocell.cloudfunctions.net/paddockDataApi/create-polygon', data, {responseType: 'text'});
   }
 
-  deletePolygon(polyId: string) {
+  deletePaddock(polyId: string) {
     const data = {'polyId': polyId};
     return this.httpClient.post('https://us-central1-app-ecocell.cloudfunctions.net/paddockDataApi/delete-polygon', data);
   }
 
-  getAllPolygonData(
+  getPaddockData(
     polyId: string,
-    lat: number[],
-    long: number[],
+    polyIndex: number,
+    lat: number,
+    long: number,
     startTimeSoil: number,
     endTimeSoil: number,
     startTimeAcc: number,
     endTimeAcc: number,
-    temperatureThresh: number) {
+    temperatureThresh: number): Observable<Paddock> {
+
     const data = {
       'polyId': '612db75ea81b765fd867eee3',
+      'polyIndex': polyIndex,
       'lat': lat,
       'long': long,
       'starTimeSoil': startTimeSoil,
@@ -38,9 +42,18 @@ export class PaddockApiService {
       'temperatureThresh': temperatureThresh
     }
 
-    this.httpClient.post('http://localhost:5001/app-ecocell/us-central1/paddockDataApi', data)
-        .subscribe(res => {
-          console.log(res);
-        })
+    return this.httpClient.post('http://localhost:5001/app-ecocell/us-central1/paddockDataApi/all-paddock-data', data)
+              .pipe(
+                map(res => {
+                  return({
+                    index: res['index'],
+                    soilData: res['soilData'],
+                    weatherData: res['weatherData'],
+                    polygonApiId: res['polygonApiId']
+                  })
+                })
+              );
   }
+
+
 }

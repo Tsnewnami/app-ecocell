@@ -1,3 +1,4 @@
+import { CompletePolygonComponent } from './home/map/complete-polygon/complete-polygon.component';
 import { PolygonEntityService } from './services/polygon-entity.service';
 import { CommonModule } from '@angular/common';
 import { EntityDataService, EntityDefinitionService, EntityMetadataMap } from '@ngrx/data';
@@ -14,7 +15,9 @@ import { PolygonsDataService } from './services/polygons-data.service';
 import { comparePolygons, Polygon } from './models/polygon.model';
 
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { PolygonListComponent } from './home/map/polygon-list/polygon-list.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -24,8 +27,6 @@ import { PaddockDetailsComponent } from './home/map/paddock-details/paddock-deta
 import { comparePaddock, Paddock } from './models/paddock.model';
 import { PaddockEntityService } from './services/paddock-entity.service';
 import { PaddockApiService } from './services/paddock-api.service';
-import { PaddockDataService } from './services/paddock-data.service';
-
 
 const entityMetaData :EntityMetadataMap = {
   Polygon: {
@@ -64,9 +65,15 @@ export const mapWeatherRoutes: Routes = [
       MatListModule,
       MatFormFieldModule,
       MatSelectModule,
-      MatIconModule
+      MatIconModule,
+      MatDialogModule,
+      MatInputModule
   ],
-  declarations: [HomeComponent, MapComponent, PolygonListComponent, PaddockDetailsComponent],
+  declarations: [HomeComponent,
+     MapComponent,
+     PolygonListComponent,
+     PaddockDetailsComponent,
+     CompletePolygonComponent],
   exports: [
     HomeComponent,
   ]
@@ -83,7 +90,6 @@ export class MapWeatherModule {
             PolygonsResolver,
             PolygonsDataService,
             PaddockEntityService,
-            PaddockDataService,
           ]
       }
   }
@@ -94,5 +100,6 @@ export class MapWeatherModule {
     private polygonDataService: PolygonsDataService) {
     eds.registerMetadataMap(entityMetaData);
     entityDataService.registerService('Polygon', polygonDataService)
+    entityDataService.registerService('Paddock', polygonDataService)
   }
 }
