@@ -32,8 +32,9 @@ export class CompletePolygonComponent implements OnInit {
   }
 
   validation(name: string) {
+    console.log(name.trim());
     this.polygons.forEach(polygon => {
-      if (polygon.name.replace(/^\s+|\s+$/g, '') === name) {
+      if (polygon.name.replace(/^\s+|\s+$/g, '') === name.trim()) {
         this.duplicateFound = true; // now your error will be displayed in browser
       } else{
         this.duplicateFound = false;

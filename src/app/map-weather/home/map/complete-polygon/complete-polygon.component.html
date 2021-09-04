@@ -3,7 +3,7 @@
     <h1>Name your paddock</h1>
     <mat-form-field appearance="fill">
       <mat-label>Name your paddock</mat-label>
-      <input matInput required #paddockName (keydown)="validation(paddockName.value)" [(ngModel)]="paddockNameC" >
+      <input matInput required #paddockName (keyup)="validation(paddockName.value)" [(ngModel)]="paddockNameC" >
     </mat-form-field>
     <mat-error *ngIf="duplicateFound">A paddock already exists with that name</mat-error>
   </li>
