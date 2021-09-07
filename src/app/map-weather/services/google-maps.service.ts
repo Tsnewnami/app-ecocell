@@ -20,6 +20,7 @@ export class GoogleMapsService {
   private currentCropType: CropType;
   private currentCropColor: string;
   private renderedPolygons: RenderedPolygon[] = []
+  private infoWindow: google.maps.InfoWindow;
 
   map: google.maps.Map;
   drawingTools: google.maps.drawing.DrawingManager;
@@ -33,7 +34,7 @@ export class GoogleMapsService {
     private dialog: MatDialog,
   ) {}
 
-  private initLoader(){
+  initLoader(){
     this.loader = new Loader({
       apiKey: environment.googleMaps,
       libraries: ['drawing', 'places']
@@ -69,6 +70,15 @@ export class GoogleMapsService {
       this.setPolygonListener();
       this.setCurrentCropType(this.currentCropType);
     })
+  }
+
+  setInfoWindowListener() {
+    google.maps.event.addListener(this.map, 'click', function(event) {
+      console.log(event)
+      // this.infowindow.setContent("this is an infowindow<br>on letter " + event.feature.getProperty('letter'));
+      // this.infowindow.setPosition(event.latLng);
+      // this.infowindow.open(map);
+    });
   }
 
   setPolygonListener(){
@@ -155,9 +165,12 @@ export class GoogleMapsService {
     });
 
       this.initDrawingTools();
+      this.infoWindow = new google.maps.InfoWindow();
       // this.drawingTools.setMap(this.map);
+
       this.setPolygonListener();
       this.setCancelDrawingListener();
+      this.setInfoWindowListener();
       this.drawingTools.setOptions({drawingControl:false});
       if(polygons) {
         polygons.forEach(polygon => {

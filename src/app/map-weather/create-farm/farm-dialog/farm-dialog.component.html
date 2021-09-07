@@ -1,0 +1,17 @@
+<ol>
+  <li>
+    <h1>Name your Farm</h1>
+    <mat-form-field appearance="fill">
+      <mat-label>Name your farm</mat-label>
+      <input matInput required #farmName (keyup)="validation(farmName.value)" [(ngModel)]="farmNameC" >
+    </mat-form-field>
+    <mat-error *ngIf="duplicateFound">A farm already exists with that name</mat-error>
+  </li>
+  <li>
+    <h2>Chose your region</h2>
+  </li>
+  <div mat-dialog-actions>
+    <button mat-button [disabled]="duplicateFound || !farmName.value" [mat-dialog-close]="[farmName.value]">Create Farm</button>
+    <button mat-button [mat-dialog-close]="false">Cancel</button>
+  </div>
+</ol>

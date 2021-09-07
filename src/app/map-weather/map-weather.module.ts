@@ -1,3 +1,7 @@
+import { FarmGuard } from './services/farm.guard';
+import { FarmsResolver } from './services/farms.resolver';
+import { FarmDataService } from './services/farm-data.service';
+import { FarmEntityService } from './services/farm-entity.service';
 import { CompletePolygonComponent } from './home/map/complete-polygon/complete-polygon.component';
 import { PolygonEntityService } from './services/polygon-entity.service';
 import { CommonModule } from '@angular/common';
@@ -27,6 +31,9 @@ import { PaddockDetailsComponent } from './home/map/paddock-details/paddock-deta
 import { comparePaddock, Paddock } from './models/paddock.model';
 import { PaddockEntityService } from './services/paddock-entity.service';
 import { PaddockApiService } from './services/paddock-api.service';
+import { CreateFarmComponent } from './create-farm/create-farm.component';
+import { FarmDialogComponent } from './create-farm/farm-dialog/farm-dialog.component';
+import { compareFarms, Farm } from './models/farm.model';
 
 const entityMetaData :EntityMetadataMap = {
   Polygon: {
@@ -38,6 +45,10 @@ const entityMetaData :EntityMetadataMap = {
   Paddock: {
     sortComparer: comparePaddock,
     selectId: (paddock: Paddock) => paddock.index
+  },
+  Farm : {
+    sortComparer: compareFarms,
+    selectId: (farm: Farm) => farm.index
   }
 
 };
@@ -45,8 +56,16 @@ const entityMetaData :EntityMetadataMap = {
 export const mapWeatherRoutes: Routes = [
   {
     path: 'app',
-    component: HomeComponent,
+    component: CreateFarmComponent,
     canActivate: [AuthGuard],
+    resolve: {
+      farms: FarmsResolver
+    }
+  },
+  {
+    path: 'app/:farm',
+    component: HomeComponent,
+    canActivate: [FarmGuard],
     resolve: {
       polygons: PolygonsResolver
     }
@@ -73,7 +92,9 @@ export const mapWeatherRoutes: Routes = [
      MapComponent,
      PolygonListComponent,
      PaddockDetailsComponent,
-     CompletePolygonComponent],
+     CompletePolygonComponent,
+     CreateFarmComponent,
+     FarmDialogComponent],
   exports: [
     HomeComponent,
   ]
@@ -90,6 +111,10 @@ export class MapWeatherModule {
             PolygonsResolver,
             PolygonsDataService,
             PaddockEntityService,
+            FarmEntityService,
+            FarmDataService,
+            FarmsResolver,
+            FarmGuard
           ]
       }
   }
@@ -97,9 +122,11 @@ export class MapWeatherModule {
   constructor(
     private eds: EntityDefinitionService,
     private entityDataService: EntityDataService,
-    private polygonDataService: PolygonsDataService) {
+    private polygonDataService: PolygonsDataService,
+    private farmDataService: FarmDataService) {
     eds.registerMetadataMap(entityMetaData);
     entityDataService.registerService('Polygon', polygonDataService)
     entityDataService.registerService('Paddock', polygonDataService)
+    entityDataService.registerService('Farm', farmDataService)
   }
 }

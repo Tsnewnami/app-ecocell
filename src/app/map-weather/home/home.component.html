@@ -1,6 +1,6 @@
 <mat-drawer-container class="example-container">
   <mat-drawer mode="side" opened>
-    <h1>Farm: Test Farm</h1>
+    <h1>{{farmName}}</h1>
     <app-polygon-list
       (polygonSelected)="selectedPolygon = $event"
       (polygonChanged)="reload()"
