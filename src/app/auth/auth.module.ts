@@ -19,6 +19,7 @@ import { MatFormFieldModule} from "@angular/material/form-field"
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatIconModule } from '@angular/material/icon';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects'
 import { AuthEffects } from './auth.effect';;
@@ -35,7 +36,11 @@ import { EmailVerificationComponent } from './email-verification/email-verificat
       MatButtonModule,
       MatSnackBarModule,
       MatDialogModule,
-      RouterModule.forChild([{path: '', component: HomepageComponent}]),
+      MatIconModule,
+      RouterModule.forChild([
+        {path: '', component: LoginComponent},
+        {path: 'signup', component: SignupComponent}
+      ]),
       MatTabsModule,
       MatFormFieldModule,
       MatToolbarModule,

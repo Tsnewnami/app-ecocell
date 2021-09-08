@@ -1,33 +1,38 @@
-  <section class="signup-homepage" fxLayout fxLayoutAlign = "center">
-    <form
-      fxLayout="column"
-      fxLayoutAlign="center center"
-      fxLayoutGap="10px"
-      #f="ngForm"
-      (ngSubmit)="onSubmit(f)">
-      <mat-form-field>
-        <input
-        type="email"
-        matInput
-        placeholder="Your Email"
-        ngModel
-        name="email"
-        email
-        #emailInput="ngModel"
-        required>
-        <mat-hint>Please enter a valid email.</mat-hint>
-      </mat-form-field>
-      <mat-form-field hintLabel="Should be at least 6 characters long.">
-        <input
-        type="password"
-        matInput
-        placeholder="Your Password"
-        ngModel
-        name="password"
-        required
-        minlength="6"
-        #pwInput="ngModel">
-      </mat-form-field>
-      <button type="submit" mat-raised-button color="primary" [disabled]="true">Sign up</button>
-    </form>
-  </section>
+<header></header>
+<div class="signup-container" fxLayout fxLayoutAlign="center center">
+<section class="signup-homepage" fxLayout fxLayoutAlign = "center">
+  <form
+    fxLayout="column"
+    fxLayoutAlign="center center"
+    fxLayoutGap="10px"
+    #f="ngForm"
+    (ngSubmit)="onSubmit(f)">
+    <h1>Sign Up</h1>
+    <mat-form-field [hideRequiredMarker]="true">
+      <mat-label>Enter your email</mat-label>
+      <input
+      type="email"
+      matInput
+      placeholder="Your Email"
+      ngModel
+      name="email"
+      email
+      #emailInput="ngModel"
+      required>
+    </mat-form-field>
+    <mat-error *ngIf="!emailInput.valid && (emailInput.dirty && emailInput.touched)">Invalid email</mat-error>
+    <mat-form-field [hideRequiredMarker]="true">
+      <mat-label>Password</mat-label>
+      <input #password1 type="password" matInput ngModel name="password" required minlength="6" #pwInput1="ngModel">
+    </mat-form-field>
+    <mat-error *ngIf="pwInput1.errors?.minlength">Password must be atleast 6 characters long</mat-error>
+     <mat-form-field [hideRequiredMarker]="true">
+      <mat-label>Confirm your password</mat-label>
+      <input #password2 type="password" matInput ngModel name="password2" required minlength="6" #pwInput2="ngModel">
+    </mat-form-field>
+    <mat-error *ngIf="password1.value !== password2.value && (pwInput1.touched && pwInput2.touched)">Passwords must match</mat-error>
+    <button  fxLayout fxLayoutAlign="center center" type="submit" mat-button [disabled]="!f.valid && password1.value !== password2.value" id="sign-up"><h2>Sign up</h2></button>
+    <a [routerLink]="['/']"><h3>Login</h3></a>
+  </form>
+</section>
+</div>

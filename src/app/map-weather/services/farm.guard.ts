@@ -28,7 +28,6 @@ export class FarmGuard implements CanActivate, OnInit{
 
       this.urlMatch$.subscribe(res => {
         this.urlMatch = res;
-
       })
 
       if(this.urlMatch){
