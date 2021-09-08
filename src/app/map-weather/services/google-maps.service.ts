@@ -1,3 +1,4 @@
+import { FarmService } from './farm.service';
 import { CompletePolygonComponent } from './../home/map/complete-polygon/complete-polygon.component';
 import { Paddock } from './../models/paddock.model';
 import { PaddockEntityService } from './paddock-entity.service';
@@ -6,8 +7,6 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { Polygon, RenderedPolygon } from './../models/polygon.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Injectable } from '@angular/core';
-import { Loader } from '@googlemaps/js-api-loader';
-import { environment } from 'src/environments/environment';
 import { map, Subject } from 'rxjs';
 import { CropType } from '../models/croptype.enum';
 import { MatDialog } from '@angular/material/dialog';
@@ -16,11 +15,9 @@ import { MatDialog } from '@angular/material/dialog';
   providedIn: 'root'
 })
 export class GoogleMapsService {
-  private loader: Loader;
   private currentCropType: CropType;
   private currentCropColor: string;
   private renderedPolygons: RenderedPolygon[] = []
-  private infoWindow: google.maps.InfoWindow;
 
   map: google.maps.Map;
   drawingTools: google.maps.drawing.DrawingManager;
@@ -32,14 +29,8 @@ export class GoogleMapsService {
     private paddockSerivce: PaddockApiService,
     private paddockEntityService: PaddockEntityService,
     private dialog: MatDialog,
+    private farmService: FarmService,
   ) {}
-
-  initLoader(){
-    this.loader = new Loader({
-      apiKey: environment.googleMaps,
-      libraries: ['drawing', 'places']
-    });
-  }
 
   initDrawingTools(){
     if (this.drawingTools != null) {
@@ -124,8 +115,6 @@ export class GoogleMapsService {
   }
 
   initMap(targetElementMap: HTMLElement, targetElementSearchBox: HTMLInputElement, polygons?: Polygon[]){
-    this.initLoader();
-    this.loader.load().then(() => {
     this.map = new google.maps.Map(targetElementMap, {
         center: {lat: -25.861078, lng: 134.598730},
         zoom: 5,
@@ -165,7 +154,6 @@ export class GoogleMapsService {
     });
 
       this.initDrawingTools();
-      this.infoWindow = new google.maps.InfoWindow();
       // this.drawingTools.setMap(this.map);
 
       this.setPolygonListener();
@@ -177,7 +165,6 @@ export class GoogleMapsService {
           this.createPolygon(polygon, polygon.index);
         })
       }
-    })
   }
 
   panTo(lat: number, long: number){
@@ -228,8 +215,14 @@ export class GoogleMapsService {
 
     this.paddockSerivce.getPaddockData("test", index, lat[0], long[0], 1, 1, 1, 1, 1)
         .subscribe((res: Paddock) => this.paddockEntityService.addOneToCache(res));
-    this.fireStore.collection('userPolygons').doc(userId).collection('polygons').doc(name).set(polygon);
-}
+    this.fireStore.collection('Users')
+                  .doc(userId)
+                  .collection('Farms')
+                  .doc(this.farmService.getCurrentFarm().name)
+                  .collection('Polygons')
+                  .doc(polygon.name)
+                  .set(polygon);
+  }
 
   createPolygon(polygon: Polygon, index: number) {
     var paths = []

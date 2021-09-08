@@ -17,12 +17,14 @@ import { AuthGuard } from '../auth/auth.guard';
 import { PolygonsResolver } from './services/polygons.resolver';
 import { PolygonsDataService } from './services/polygons-data.service';
 import { comparePolygons, Polygon } from './models/polygon.model';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { PolygonListComponent } from './home/map/polygon-list/polygon-list.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -86,7 +88,9 @@ export const mapWeatherRoutes: Routes = [
       MatSelectModule,
       MatIconModule,
       MatDialogModule,
-      MatInputModule
+      MatInputModule,
+      MatCardModule,
+      FlexLayoutModule
   ],
   declarations: [HomeComponent,
      MapComponent,

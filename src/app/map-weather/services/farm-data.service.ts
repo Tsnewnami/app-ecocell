@@ -26,6 +26,9 @@ export class FarmDataService extends DefaultDataService<Farm>{
 
             index: doc.payload.doc.data()['index'],
             name: doc.payload.doc.data()['name'],
+            region: doc.payload.doc.data()['region'],
+            regionLat: doc.payload.doc.data()['regionLat'],
+            regionLong: doc.payload.doc.data()['regionLong'],
          }
       );
       });
@@ -34,7 +37,7 @@ export class FarmDataService extends DefaultDataService<Farm>{
 
   delete(key: string) :Observable<number | string> {
     const userId = JSON.parse(localStorage.getItem('user'))['id'];
-    return from(this.fireStore.collection('userPolygons').doc(userId).collection('polygons').doc(key).delete().then(() =>{
+    return from(this.fireStore.collection('Users').doc(userId).collection('Farms').doc(key).delete().then(() =>{
       return 1;
     }))
   }

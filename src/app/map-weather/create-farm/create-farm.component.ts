@@ -16,23 +16,17 @@ import { Farm } from '../models/farm.model';
 })
 export class CreateFarmComponent implements OnInit {
   farms$: Observable<Farm[]>;
-  private farms: Farm[]
 
   constructor(
     private dialog: MatDialog,
-    private googleMapsService: GoogleMapsService,
     private farmService: FarmService,
     private router: Router,
     private route: ActivatedRoute,
-    private farmEntityService: FarmEntityService
+    private farmEntityService: FarmEntityService,
   ) { }
 
   ngOnInit(): void {
     this.farms$ = this.farmEntityService.entities$;
-    this.farms$
-      .subscribe(farms => {
-        this.farms = farms;
-      })
   }
 
   onCreateFarm() {
@@ -41,20 +35,22 @@ export class CreateFarmComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(async result => {
       if (result) {
-        this.farmService.pushFarmtoDb(result[0].trim())
-          .then(() => {
-            setTimeout(() => {
-              this.router.navigate([result[0]], {relativeTo: this.route})
-            }, 120);
-          })
-          .catch(err => {
-            console.log(err);
-          })
+        this.farmService.pushFarmtoDb(result[1].trim(), result[2].trim(), result[0][0], result[0][1])
       } else{
         return;
       }
 
     })
+  }
+
+  onDeleteFarm(farm: Farm) {
+    this.farmEntityService.delete(farm.name);
+    this.farmEntityService.removeOneFromCache(farm);
+  }
+
+  onViewFarm(farm: Farm) {
+    this.farmService.setCurrentFarm(farm);
+    this.router.navigate([farm.name], {relativeTo: this.route})
   }
 
 }

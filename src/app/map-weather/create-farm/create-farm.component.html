@@ -1,2 +1,24 @@
 <h1>Your Farms</h1>
-<button mat-raised-button  color="primary" (click)="onCreateFarm()">Create Farm</button>
+<div class="farm-card-list" fxLayout fxLayoutGap="20px">
+  <mat-card *ngFor="let farm of farms$ | async" class="farm-card">
+    <mat-card-header>
+      <mat-card-title>{{ farm.name }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p>
+        {{ farm.region }}
+      </p>
+    </mat-card-content>
+    <mat-card-actions class="farm-actions">
+      <button mat-raised-button color="primary" (click)="onViewFarm(farm)">
+        VIEW
+    </button>
+      <button mat-mini-fab color="warn">
+        <mat-icon class="add-course-btn" (click)="onDeleteFarm(farm)">delete</mat-icon>
+      </button>
+    </mat-card-actions>
+  </mat-card>
+
+  <button mat-raised-button  color="primary" (click)="onCreateFarm()">Create Farm</button>
+</div>
+

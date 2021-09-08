@@ -1,6 +1,9 @@
 export interface Farm{
   index: number;
   name: string;
+  region: string;
+  regionLat: number;
+  regionLong: number;
 }
 
 export function compareFarms(f1:Farm, f2:Farm) {

@@ -1,3 +1,4 @@
+import { FarmService } from './farm.service';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from "@angular/core";
@@ -11,13 +12,22 @@ import { from } from 'rxjs';
 @Injectable()
 export class PolygonsDataService extends DefaultDataService<Polygon>{
 
-  constructor(http: HttpClient, private fireStore: AngularFirestore, httpUrlGenerator: HttpUrlGenerator) {
+  constructor(
+    http: HttpClient,
+    private fireStore: AngularFirestore,
+    httpUrlGenerator: HttpUrlGenerator,
+    private farmService: FarmService) {
     super('Polygon', http,  httpUrlGenerator);
   }
 
   getAll(): Observable<Polygon[]> {
     const userId = JSON.parse(localStorage.getItem('user'))['id'];
-    return this.fireStore.collection('userPolygons').doc(userId).collection('polygons')
+    return this.fireStore
+    .collection('Users')
+    .doc(userId)
+    .collection('Farms')
+    .doc(this.farmService.getCurrentFarm().name)
+    .collection('Polygons')
     .snapshotChanges()
     .pipe(map( docArray => {
       return docArray.map( doc => {
@@ -39,7 +49,14 @@ export class PolygonsDataService extends DefaultDataService<Polygon>{
 
   delete(key: string) :Observable<number | string> {
     const userId = JSON.parse(localStorage.getItem('user'))['id'];
-    return from(this.fireStore.collection('userPolygons').doc(userId).collection('polygons').doc(key).delete().then(() =>{
+    return from(this.fireStore
+      .collection('Users')
+      .doc(userId)
+      .collection('Farms')
+      .doc(this.farmService.getCurrentFarm().name)
+      .collection('Polygons')
+      .doc(key)
+      .delete().then(() =>{
       return 1;
     }))
   }
