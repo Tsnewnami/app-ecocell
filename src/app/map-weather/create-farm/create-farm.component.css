@@ -1,9 +1,76 @@
-.farm-card {
-  max-width: 400px;
+mat-card {
+  padding: 0;
+  width: 244px;
+  height: 287px;
 }
-
 
 .farm-actions {
   text-align: center;
+}
 
+h1 {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 34px;
+  line-height: 40px;
+  /* or 118% */
+
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+
+  color: #000000;
+}
+
+.underline {
+  width: 1126px;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.12);
+  margin-bottom: 34px;
+}
+
+.create-farm-card {
+  background: #EEEEEE;
+  border-radius: 4px;
+}
+
+.add {
+  transform: scale(4);
+}
+
+#create-farm-button {
+  background: #EEEEEE;
+}
+
+p{
+  font-style: normal;
+  font-weight: normal;
+  font-size: 20px;
+  line-height: 32px;
+  /* identical to box height, or 160% */
+
+  letter-spacing: 0.25px;
+
+  color: #000000;
+}
+
+.image-container {
+  background: #3F51B5;
+  width: 244px;
+  height: 193px;
+  border-radius: 4px 4px 0px 0px;
+}
+
+#farm-icon {
+  margin-top: 18px;
+  width: 139px;
+  height: 124px;
+}
+
+.farm-name-container{
+  margin-right: 99px;
+}
+
+#view-farm{
+  margin-right: 50px;
 }

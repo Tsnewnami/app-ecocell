@@ -1,3 +1,85 @@
 .farm-dialog{
-  width: 500px;
+  width: 430px;
+  height: 306px;
 }
+
+ol {
+  list-style-type: none;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
+
+li{
+
+}
+
+h1 {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 32px;
+  /* identical to box height, or 160% */
+
+  letter-spacing: 0.25px;
+
+  /* black/0.87 */
+
+  color: rgba(0, 0, 0, 0.87);
+}
+
+mat-form-field{
+  width: 382px;
+  height: 52px;
+  margin-bottom: 16px;
+}
+
+.mat-dialog-actions {
+  margin-top: 32px;
+  align-items: right;
+}
+
+#create-farm{
+  background: #3CB15D;
+  border-radius: 4px;
+
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 36px;
+  /* identical to box height, or 257% */
+
+  display: flex;
+  align-items: center;
+  text-align: center;
+  letter-spacing: 1.25px;
+  text-transform: uppercase;
+
+  /* shades/white */
+
+  color: #FFFFFF;
+  }
+
+  #create-farm:disabled{
+    background: #a3ebb7;
+  }
+
+  #cancel-create{
+  margin-left: 107px;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 36px;
+  /* identical to box height, or 257% */
+
+  display: flex;
+  align-items: center;
+  text-align: center;
+  letter-spacing: 1.25px;
+  text-transform: uppercase;
+
+  /* black/0.87 */
+
+  color: rgba(0, 0, 0, 0.87);
+  }
+

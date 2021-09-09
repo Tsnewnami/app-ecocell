@@ -1,4 +1,5 @@
 .map-screen {
-  width: 100w;
-  height: 60vh;
+  overflow:hidden;
+  width:1172px;
+  height: 781px;
 }

@@ -25,9 +25,11 @@ import { MatListModule } from '@angular/material/list';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { PolygonListComponent } from './home/map/polygon-list/polygon-list.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { PaddockDetailsComponent } from './home/map/paddock-details/paddock-details.component';
 import { comparePaddock, Paddock } from './models/paddock.model';
@@ -36,6 +38,7 @@ import { PaddockApiService } from './services/paddock-api.service';
 import { CreateFarmComponent } from './create-farm/create-farm.component';
 import { FarmDialogComponent } from './create-farm/farm-dialog/farm-dialog.component';
 import { compareFarms, Farm } from './models/farm.model';
+import { MapHomeComponent } from './home/map-home/map-home.component';
 
 const entityMetaData :EntityMetadataMap = {
   Polygon: {
@@ -58,7 +61,7 @@ const entityMetaData :EntityMetadataMap = {
 export const mapWeatherRoutes: Routes = [
   {
     path: 'app',
-    component: CreateFarmComponent,
+    component: HomeComponent,
     canActivate: [AuthGuard],
     resolve: {
       farms: FarmsResolver
@@ -66,10 +69,10 @@ export const mapWeatherRoutes: Routes = [
   },
   {
     path: 'app/:farm',
-    component: HomeComponent,
+    component: MapHomeComponent,
     canActivate: [FarmGuard],
     resolve: {
-      polygons: PolygonsResolver
+      farms: FarmsResolver
     }
   },
 ];
@@ -90,7 +93,9 @@ export const mapWeatherRoutes: Routes = [
       MatDialogModule,
       MatInputModule,
       MatCardModule,
-      FlexLayoutModule
+      FlexLayoutModule,
+      MatToolbarModule,
+      MatTabsModule
   ],
   declarations: [HomeComponent,
      MapComponent,
@@ -98,7 +103,8 @@ export const mapWeatherRoutes: Routes = [
      PaddockDetailsComponent,
      CompletePolygonComponent,
      CreateFarmComponent,
-     FarmDialogComponent],
+     FarmDialogComponent,
+     MapHomeComponent],
   exports: [
     HomeComponent,
   ]

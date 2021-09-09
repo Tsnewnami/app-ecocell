@@ -1,24 +1,36 @@
 <h1>Your Farms</h1>
-<div class="farm-card-list" fxLayout fxLayoutGap="20px">
-  <mat-card *ngFor="let farm of farms$ | async" class="farm-card">
-    <mat-card-header>
-      <mat-card-title>{{ farm.name }}</mat-card-title>
-    </mat-card-header>
+<div class="underline"></div>
+<div class="farm-card-list" fxLayout fxLayoutGap="21px">
+  <mat-card *ngFor="let farm of farms$ | async" class="farm-card" fxLayout="column" fxLayoutAlign="space-between center">
+    <div class="image-container" fxLayout="column" fxLayoutAlign="center center">
+      <img mat-card-image src="assets/images/farm-card-icon.png" id="farm-icon" >
+    </div>
     <mat-card-content>
-      <p>
-        {{ farm.region }}
-      </p>
-    </mat-card-content>
-    <mat-card-actions class="farm-actions">
-      <button mat-raised-button color="primary" (click)="onViewFarm(farm)">
+      <div class="farm-name-container">
+        <p>
+          {{ farm.name }}
+        </p>
+      </div>
+      <button id="view-farm" mat-raised-button color="primary" (click)="onViewFarm(farm)">
         VIEW
     </button>
-      <button mat-mini-fab color="warn">
+      <button id="delete-farm"  mat-mini-fab color="warn">
         <mat-icon class="add-course-btn" (click)="onDeleteFarm(farm)">delete</mat-icon>
       </button>
-    </mat-card-actions>
+    </mat-card-content>
   </mat-card>
 
-  <button mat-raised-button  color="primary" (click)="onCreateFarm()">Create Farm</button>
+  <mat-card class="create-farm-card" fxLayout="column" fxLayoutAlign="center center" >
+    <mat-card-actions class="create-farm-actions">
+      <button mat-flat-button id="create-farm-button" (click)="onCreateFarm()">
+        <mat-icon class="add">add</mat-icon>
+      </button>
+    </mat-card-actions>
+    <mat-card-content>
+      <p>
+        Create a Farm
+      </p>
+    </mat-card-content>
+  </mat-card>
 </div>
 

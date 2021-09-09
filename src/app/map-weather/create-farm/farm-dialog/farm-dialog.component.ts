@@ -25,7 +25,7 @@ export class FarmDialogComponent implements OnInit {
   farms$: Observable<Farm[]>;
   farmNameC: string;
   duplicateFound: boolean = false;
-  validRegion: boolean = true;
+  validRegion: boolean = false;
 
 
 

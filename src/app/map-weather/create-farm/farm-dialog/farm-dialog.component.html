@@ -1,6 +1,4 @@
-<div class="farm-dialog" fxLayout fxLayoutAlign="center center">
-  <ol>
-    <li>
+<div class="farm-dialog" fxLayout="column" fxLayoutAlign="center center">
       <h1>Name your Farm</h1>
       <mat-form-field appearance="fill">
         <mat-label>Name your farm</mat-label>
@@ -12,26 +10,23 @@
         [(ngModel)]="farmNameC" >
       </mat-form-field>
       <mat-error *ngIf="duplicateFound">A farm already exists with that name</mat-error>
-    </li>
-    <li>
-      <h2>Chose your region</h2>
       <mat-form-field appearance="fill">
-      <mat-label>Enter farm region</mat-label>
       <input
       matInput
       required
       class="input"
+      placeholder="Enter Farm Region"
       type="text"
       [(ngModel)]="autocompleteInput"
       #addresstext
       (keyup)="validationRegion()"
       >
     </mat-form-field>
-    <mat-error *ngIf="!validRegion">Please enter a valid region for your farm</mat-error>
-    </li>
-    <div mat-dialog-actions>
-      <button mat-button [disabled]="duplicateFound || !farmName.value || !validRegion" (click)="onClose(farmName.value)">Create Farm</button>
-      <button mat-button [mat-dialog-close]="false">Cancel</button>
+    <mat-error *ngIf="!validRegion && addresstext.value">Please enter a valid region for your farm</mat-error>
+
+    <div class="mat-dialog-actions">
+      <button id="cancel-create" mat-button [mat-dialog-close]="false">C A N C E L</button>
+      <button id="create-farm" mat-button [disabled]="duplicateFound || !farmName.value || !validRegion" (click)="onClose(farmName.value)">Create Farm</button>
     </div>
-  </ol>
+
 </div>

@@ -1,22 +1,24 @@
-<mat-drawer-container class="example-container">
-  <mat-drawer mode="side" opened>
-    <h1>{{farmName}}</h1>
-    <app-polygon-list
-      (polygonSelected)="selectedPolygon = $event"
-      (polygonChanged)="reload()"
-      (polygonDeleted)="selectedPolygon = null"
-      [polygons]="polygons$ | async">
 
-    </app-polygon-list>
-  </mat-drawer>
-  <mat-drawer-content><app-map></app-map></mat-drawer-content>
-</mat-drawer-container>
-<div class="paddock-details-div">
-  <app-paddock-details
-      *ngIf="selectedPolygon; else infoText"
-      [polygon]="selectedPolygon"></app-paddock-details>
-    <ng-template #infoText>
-      <h1>Please select a Paddock to show it's details !</h1>
-    </ng-template>
+<div class="app-container" fxLayout fxLayoutAlign="center center">
+  <mat-drawer-container class="drawer-container" >
+    <mat-drawer mode="side" opened>
+      <h1>F . I . N</h1>
+      <div class="header-underline"> </div>
+      <mat-list role="list">
+      <mat-list-item role="listitem"> <mat-icon class="add">add</mat-icon> <a [routerLink]="['/app']">Home</a></mat-list-item>
+      </mat-list>
+    </mat-drawer>
+  <mat-drawer-content>
+    <mat-toolbar style="min-height:64px" fxLayout fxLayoutAlign="space-between center">
+      <div class="farm-toolbar-text" >
+        Farms
+      </div>
+      <mat-icon aria-hidden="false" aria-label="Example home icon">more_vert</mat-icon>
+    </mat-toolbar>
+    <div class=drawer-content>
+      <app-create-farm></app-create-farm>
+    </div>
+  </mat-drawer-content>
+  </mat-drawer-container>
 </div>
 

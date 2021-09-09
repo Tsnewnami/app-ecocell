@@ -10,6 +10,7 @@ import { Injectable } from '@angular/core';
 import { map, Subject } from 'rxjs';
 import { CropType } from '../models/croptype.enum';
 import { MatDialog } from '@angular/material/dialog';
+import { style } from '@angular/animations';
 
 @Injectable({
   providedIn: 'root'
@@ -119,6 +120,7 @@ export class GoogleMapsService {
         center: {lat: -25.861078, lng: 134.598730},
         zoom: 5,
         streetViewControl: false,
+        mapTypeId: google.maps.MapTypeId.SATELLITE
     });
 
     const searchBox = new google.maps.places.SearchBox(targetElementSearchBox);

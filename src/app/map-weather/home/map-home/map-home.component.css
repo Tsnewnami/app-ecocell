@@ -25,11 +25,8 @@ mat-drawer {
 
 mat-drawer-content{
   width: 81%;
-  background-color: #F6F8F9;;
-}
-
-.drawer-content{
-  margin-left: 23px;
+  background-color: #F6F8F9;
+  overflow:hidden;
 }
 
 .header-underline{
@@ -45,7 +42,16 @@ mat-toolbar{
   /* elevation/4 */
 
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
-  margin-bottom: 36px;
+  margin-bottom: 6px;
+}
+
+::ng-deep .mat-tab-list .mat-tab-labels .mat-tab-label-active {
+  color: #3CB15D;
+
+}
+
+::ng-deep .mat-tab-group.mat-primary .mat-ink-bar {
+  background-color: #3CB15D !important;
 }
 
 .farm-toolbar-text{
@@ -66,7 +72,18 @@ mat-toolbar{
   text-align: center;
 }
 
-mat-list {
+.drawer-content-tabs{
+  height: 836px;
+
+}
+
+
+::ng-deep.mat-tab-label, ::ng-deep.mat-tab-label-active{
+  margin-left: 16px!important;
+ }
+
+
+ mat-list {
   margin-top: -25px;
 }
 
@@ -85,12 +102,10 @@ text-decoration: none;
 }
 
 mat-list a:hover {
-text-decoration: underline white;
-  }
-
+  text-decoration: underline white;
+}
 
 .add {
   color: #CBD4DB;
   margin-right: 32px;
 }
-
