@@ -30,6 +30,7 @@ import { PolygonListComponent } from './home/map/polygon-list/polygon-list.compo
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { PaddockDetailsComponent } from './home/map/paddock-details/paddock-details.component';
 import { comparePaddock, Paddock } from './models/paddock.model';
@@ -95,7 +96,8 @@ export const mapWeatherRoutes: Routes = [
       MatCardModule,
       FlexLayoutModule,
       MatToolbarModule,
-      MatTabsModule
+      MatTabsModule,
+      MatExpansionModule
   ],
   declarations: [HomeComponent,
      MapComponent,

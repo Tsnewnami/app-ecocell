@@ -1,14 +1,47 @@
+<div class="content-container" fxLayout="row" fxLayoutAlign="center">
+  <div class="accordion-content" fxFlex="4">
+    <mat-accordion multi="true">
+      <mat-expansion-panel #expansionPanel hideToggle="true" disabled>
+        <mat-expansion-panel-header >
+          <mat-panel-description>
+            Paddocks
+          </mat-panel-description>
+          <div class="closed-arrow-div" *ngIf="!expansionPanel.expanded" fxLayout fxLayoutAlign="center center">
+            <button mat-button (click)="onOpenAccordion(expansionPanel)"><mat-icon id="closed-arrow" >arrow_forward_ios</mat-icon></button>
+          </div>
 
-  <input
-  id="pac-input"
-  class="controls"
-  type="text"
-  placeholder="Search For Farm Location"
-  ngModel
-  #pacinput
-  name="pacinput"
-/>
-<div class="map-screen" id="map" ngModel #map></div>
+        </mat-expansion-panel-header>
+        <div class="open-arrow-div" *ngIf="expansionPanel.expanded" fxLayout fxLayoutAlign="center center">
+          <button mat-button (click)="onCloseAccordion(expansionPanel)"><mat-icon id="open-arrow" >arrow_back_ios</mat-icon></button>
+        </div>
+        <div class="panel-content" fxLayout="column" fxLayoutAlign="center center">
+          <div class="panel-header" fxFlex="12">
+            <h1>Paddocks</h1>
+
+            <button mat-button>Draw Paddock</button>
+            <mat-divider style="width: 268px;"></mat-divider>
+          </div>
+          <div class="paddock-list" fxFlex>
+          </div>
+        </div>
+
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+
+  <div class="map-container" fxFlex>
+    <input
+    id="pac-input"
+    class="controls"
+    type="text"
+    placeholder="Search For Farm Location"
+    ngModel
+    #pacinput
+    name="pacinput"
+  />
+  <div class="map-screen" id="map" ngModel #map></div>
+  </div>
+</div>
 
 <!-- <button mat-raised-button color="primary"(click)="drawPolygon()" [disabled]="!polygonButtonsEnabled">Draw Polygon</button>
 <button mat-raised-button color="primary"(click)="finishPolygon()" [disabled]="!polygonButtonsEnabled">Finish Drawing Polygon</button>
@@ -21,3 +54,4 @@
     <mat-option value="barley">Barley</mat-option>
   </mat-select>
 </mat-form-field> -->
+

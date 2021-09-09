@@ -119,8 +119,11 @@ export class GoogleMapsService {
     this.map = new google.maps.Map(targetElementMap, {
         center: {lat: -25.861078, lng: 134.598730},
         zoom: 5,
-        streetViewControl: false,
-        mapTypeId: google.maps.MapTypeId.SATELLITE
+        disableDefaultUI: true,
+        scaleControl: true,
+        zoomControl: true,
+        mapTypeId: google.maps.MapTypeId.HYBRID,
+        fullscreenControl: false,
     });
 
     const searchBox = new google.maps.places.SearchBox(targetElementSearchBox);

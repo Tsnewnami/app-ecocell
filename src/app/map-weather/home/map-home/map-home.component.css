@@ -50,6 +50,10 @@ mat-toolbar{
 
 }
 
+mat-tab-group{
+  background: #FFFFFF;
+}
+
 ::ng-deep .mat-tab-group.mat-primary .mat-ink-bar {
   background-color: #3CB15D !important;
 }

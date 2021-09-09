@@ -1,5 +1,109 @@
 .map-screen {
   overflow:hidden;
-  width:1172px;
+  position: fixed;
   height: 781px;
+  z-index: -1;
+}
+
+.mat-accordion {
+  display: block;
+  transform-origin: top left;
+  transform: rotate(-90deg) translateX(-781px); /* rotate and position it; translateX value corresponds to panel height */
+  width: 781px; /* this will be the height of the accordion (inversed due to rotation) */
+
+}
+
+.mat-expansion-panel {
+  max-height: 358px; /* this will be the width of the panel (inversed due to rotation) */
+  background: #FFFFFF;
+  /* elevation/5 */
+
+  box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.2);
+  border-radius: 0 !important;
+}
+
+.panel-content {
+  transform-origin: top left;
+  z-index:1  !important;
+  transform: rotate(90deg); /* rotate back */
+  margin-left: 100%; /* position it */
+  height: 358px; /* real height of the content */
+  width: 400px; /* real width of the content */
+  border-radius: 0 !important;
+}
+
+.panel-open-header{
+
+  transform-origin: top left;
+  transform: rotate(90deg); /* rotate back */
+  margin-left: 100%; /* position it */
+}
+
+.closed-arrow-div{
+  position:fixed !important;
+  z-index:0  !important;
+  left: 92.29%;
+  right: -55.88%;
+  top: 70.29%;
+  bottom: -65.88%;
+  width: 34px;
+  height: 34px;
+  background: #4CAF50;
+  /* elevation/4 */
+
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 34px;
+}
+
+.open-arrow-div {
+  position:fixed !important;
+  z-index: 0 !important;
+  left: 92.29%;
+  right: -10.88%;
+  top: 95.29%;
+  bottom: -65.88%;
+  width: 34px;
+  height: 34px;
+  background: #FFFFFF;
+  /* elevation/4 */
+
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 34px;
+}
+
+#closed-arrow{
+  color: #FFFFFF;
+  transform: rotate(90deg);
+}
+
+#open-arrow{
+  transform: rotate(90deg);
+  margin-top: 5px;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.panel-header{
+  width: 100%;
+}
+
+.panel-header h1{
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 24px;
+  /* or 171% */
+
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+
+  /* black/0.6 */
+
+  color: rgba(0, 0, 0, 0.6);
+
+}
+
+::ng-deep.mat-button-focus-overlay {
+  background-color:transparent;
 }

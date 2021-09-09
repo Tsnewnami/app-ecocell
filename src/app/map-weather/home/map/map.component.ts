@@ -4,6 +4,7 @@ import { GoogleMapsPolygonService } from './../../services/google-maps-polygon.s
 import { GoogleMapsService } from '../../services/google-maps.service';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Polygon } from '../../models/polygon.model';
+import { MatExpansionPanel } from '@angular/material/expansion';
 
 @Component({
   selector: 'app-map',
@@ -15,6 +16,7 @@ export class MapComponent implements OnInit {
   @ViewChild('pacinput', {read: ElementRef, static: true}) searchBoxElement: ElementRef<HTMLInputElement>;
   polygons$: Observable<Polygon[]>;
   private polygons: Polygon[]
+  panelOpenState = false;
   polygonButtonsEnabled = false;
 
   constructor(
@@ -51,4 +53,13 @@ export class MapComponent implements OnInit {
   finishPolygon() {
     this.googleMapsPolygonService.stopPolygonEvent();
   }
+
+  onOpenAccordion(panel: MatExpansionPanel) {
+    panel.open();
+  }
+
+  onCloseAccordion(panel: MatExpansionPanel) {
+    panel.close();
+  }
+
 }
