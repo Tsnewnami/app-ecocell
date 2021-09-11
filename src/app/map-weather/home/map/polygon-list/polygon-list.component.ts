@@ -1,4 +1,3 @@
-import { PaddockApiService } from './../../../services/paddock-api.service';
 import { PolygonEntityService } from './../../../services/polygon-entity.service';
 import { GoogleMapsService } from './../../../services/google-maps.service';
 import { Component, Input, OnInit, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';

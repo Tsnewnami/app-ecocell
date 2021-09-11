@@ -1,0 +1,88 @@
+.vertical-line {
+  position: absolute;
+  width: 4px;
+  height: 240px;
+  background: #FB8C00;
+  margin-top: 170px;
+  margin-left: -113px;
+}
+
+.container {
+  position:absolute;
+}
+
+.row-one{
+  margin-top: -35px;
+}
+
+.row-two {
+  margin-top: 16px;
+}
+
+h1 {
+  position: absolute;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 20px;
+  line-height: 32px;
+  /* identical to box height, or 160% */
+  letter-spacing: 0.25px;
+  color: #000000;
+  margin-left: -101px;
+}
+
+ul{
+  position: absolute;
+  margin-left: -140px;
+  list-style-type: none;
+}
+
+a {
+  position: absolute;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 20px;
+  line-height: 32px;
+  /* identical to box height, or 160% */
+  letter-spacing: 0.25px;
+  color: #3CB15D;
+
+  position: absolute;
+  margin-left: 79px;
+}
+
+li {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 24px;
+  /* or 150% */
+
+  letter-spacing: 0.5px;
+
+  /* Main Text */
+
+  color: #000000;
+
+
+  /* Inside Auto Layout */
+
+  margin: 2px 0px;
+}
+
+.mat-list-base .mat-list-item .mat-divider, .mat-list-base .mat-list-option .mat-divider {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  margin: -190px -98px;
+}
+
+::ng-deep #poly-mat-list {
+  margin-left: 130px;
+}
+
+::ng-deep .mat-list-item {
+  margin-top: -4px;
+  padding-bottom: 210px !important;
+}

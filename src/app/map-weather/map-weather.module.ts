@@ -73,7 +73,7 @@ export const mapWeatherRoutes: Routes = [
     component: MapHomeComponent,
     canActivate: [FarmGuard],
     resolve: {
-      farms: FarmsResolver
+      farms: PolygonsResolver
     }
   },
 ];

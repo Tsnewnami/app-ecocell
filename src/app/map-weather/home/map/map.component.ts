@@ -18,6 +18,11 @@ export class MapComponent implements OnInit {
   private polygons: Polygon[]
   panelOpenState = false;
   polygonButtonsEnabled = false;
+  drawState = false;
+  initialLoad = true;
+  opened = false;
+  showFiller = false;
+
 
   constructor(
     private googleMapsService: GoogleMapsService,
@@ -31,7 +36,7 @@ export class MapComponent implements OnInit {
       .subscribe(polygons => {
         this.polygons = polygons as Polygon[];
       })
-
+    console.log(this.polygons);
     this.googleMapsService.initMap(this.mapElement.nativeElement, this.searchBoxElement.nativeElement, this.polygons);
   }
 
@@ -46,12 +51,18 @@ export class MapComponent implements OnInit {
   }
 
   drawPolygon() {
+    if (this.initialLoad) {
+      this.googleMapsService.setDrawingTools();
+      this.initialLoad = false;
+    }
+
     this.googleMapsPolygonService.initPolygonEvent();
-    console.log(this.polygons$);
+    this.drawState = !this.drawState
   }
 
   finishPolygon() {
     this.googleMapsPolygonService.stopPolygonEvent();
+    this.drawState = !this.drawState
   }
 
   onOpenAccordion(panel: MatExpansionPanel) {
@@ -60,6 +71,10 @@ export class MapComponent implements OnInit {
 
   onCloseAccordion(panel: MatExpansionPanel) {
     panel.close();
+  }
+
+  toggleSideBar() {
+    this.opened = !this.opened;
   }
 
 }

@@ -19,12 +19,12 @@ h1 {
 }
 
 mat-drawer {
-  width: 19%;
+  width: 12%;
   background-color:#1E4354
 }
 
 mat-drawer-content{
-  width: 81%;
+  width: 88%;
   background-color: #F6F8F9;;
 }
 
