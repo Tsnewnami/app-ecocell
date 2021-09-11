@@ -32,20 +32,20 @@
     </div> -->
 
 <mat-list id="poly-mat-list">
-  <mat-list-item *ngFor="let polygon of polygons">
+  <mat-list-item *ngFor="let polygon of polygons; let i = index" >
     <div class="vertical-line" ></div>
     <div class="container" >
       <div class="row-one" >
         <h1> {{polygon.name}}</h1>
         <a>edit </a>
       </div>
-      <div class="row-two">
+      <div class="row-two" *ngIf="(paddocks$  |async)">
         <ul>
           <li>Type</li>
           <li>Area</li>
-          <li>Soil moisture</li>
-          <li>Soil temperature</li>
-          <li>Local temperature</li>
+          <li>Soil Moisture: {{paddocks[i].soilData[1]}} m<sup>3</sup> &#8725; m<sup>3</sup>  </li>
+          <li>Soil temperature: {{paddocks[i].soilData[2]}} &#8451;</li>
+          <li>Local temperature: {{paddocks[i].weatherData[0]}} &#8451; </li>
           <li>Crop Health</li>
         </ul>
       </div>

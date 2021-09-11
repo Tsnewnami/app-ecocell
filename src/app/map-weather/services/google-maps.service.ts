@@ -251,9 +251,6 @@ export class GoogleMapsService {
       index: index,
       polygon: poly
     });
-
-    this.paddockSerivce.getPaddockData("test", index, polygon.lat[0], polygon.long[0], 1, 1, 1, 1, 1)
-            .subscribe((res: Paddock) => this.paddockEntityService.addOneToCache(res));
   }
 
   deletePolygon(index: number){

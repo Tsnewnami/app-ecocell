@@ -1,7 +1,10 @@
+import { PaddockEntityService } from './../../../services/paddock-entity.service';
+import { Paddock } from './../../../models/paddock.model';
 import { PolygonEntityService } from './../../../services/polygon-entity.service';
 import { GoogleMapsService } from './../../../services/google-maps.service';
 import { Component, Input, OnInit, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
 import { Polygon } from 'src/app/map-weather/models/polygon.model';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-polygon-list',
@@ -22,11 +25,23 @@ export class PolygonListComponent implements OnInit {
   @Output()
   polygonDeleted = new EventEmitter<void>();
 
+  paddocks$: Observable<Paddock[]>;
+  paddocks: Paddock[]
+  loaded = false;
+
   constructor(
     private googleMapsService: GoogleMapsService,
-    private polygonEntityService: PolygonEntityService) { }
+    private polygonEntityService: PolygonEntityService,
+    private paddockEntityService: PaddockEntityService) { }
 
   ngOnInit(): void {
+      this.paddocks$ = this.paddockEntityService.entities$
+      this.paddocks$
+        .subscribe(paddocks => {
+          this.paddocks = paddocks;
+          this.loaded = true;
+        })
+      console.log(this.paddocks);
 
   }
 

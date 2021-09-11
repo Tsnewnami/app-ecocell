@@ -36,7 +36,7 @@ export class MapComponent implements OnInit {
       .subscribe(polygons => {
         this.polygons = polygons as Polygon[];
       })
-    console.log(this.polygons);
+
     this.googleMapsService.initMap(this.mapElement.nativeElement, this.searchBoxElement.nativeElement, this.polygons);
   }
 

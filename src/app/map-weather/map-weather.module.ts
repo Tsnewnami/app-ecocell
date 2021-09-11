@@ -65,7 +65,7 @@ export const mapWeatherRoutes: Routes = [
     component: HomeComponent,
     canActivate: [AuthGuard],
     resolve: {
-      farms: FarmsResolver
+      farms: FarmsResolver,
     }
   },
   {
@@ -73,7 +73,7 @@ export const mapWeatherRoutes: Routes = [
     component: MapHomeComponent,
     canActivate: [FarmGuard],
     resolve: {
-      farms: PolygonsResolver
+      polygons: PolygonsResolver
     }
   },
 ];
