@@ -166,3 +166,10 @@ ul {
 #paddock-divider {
   margin-top: 229px;
 }
+
+#home-region {
+  color: #4CAF50;
+  position: absolute;
+  margin-left: 205px;
+  margin-top: -30px;
+}

@@ -41,7 +41,6 @@ export class PolygonListComponent implements OnInit {
           this.paddocks = paddocks;
           this.loaded = true;
         })
-      console.log(this.paddocks);
 
   }
 

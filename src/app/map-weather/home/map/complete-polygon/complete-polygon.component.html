@@ -1,26 +1,97 @@
-<ol>
-  <li>
-    <h1>Name your paddock</h1>
-    <mat-form-field appearance="fill">
-      <mat-label>Name your paddock</mat-label>
-      <input matInput required #paddockName (keyup)="validation(paddockName.value)" [(ngModel)]="paddockNameC" >
-    </mat-form-field>
-    <mat-error *ngIf="duplicateFound">A paddock already exists with that name</mat-error>
-  </li>
-  <li>
-    <h2>Chose your crop type</h2>
-    <mat-form-field appearance="fill">
-      <mat-label>Select Crop Type</mat-label>
-      <mat-select #cropType>
-        <mat-option value="corn">Corn</mat-option>
-        <mat-option value="wheat">Wheat</mat-option>
-        <mat-option value="sorghum">Sorghum</mat-option>
-        <mat-option value="barley">Barley</mat-option>
-      </mat-select>
-    </mat-form-field>
-  </li>
-  <div mat-dialog-actions>
-    <button mat-button [disabled]="duplicateFound || !paddockName.value || !cropType.value " [mat-dialog-close]="[paddockName.value, cropType.value]">Create Paddock</button>
-    <button mat-button [mat-dialog-close]="false">Cancel</button>
-  </div>
-</ol>
+<div class="container">
+  <ol class="paddock-ol">
+    <li>
+      <span>
+        <h1>Name your paddock</h1>
+        <mat-form-field appearance="fill">
+          <mat-label>Name your paddock</mat-label>
+          <input matInput required #paddockName (keyup)="validation(paddockName.value)" [(ngModel)]="paddockNameC" >
+        </mat-form-field>
+        <mat-error *ngIf="duplicateFound">A paddock already exists with that name</mat-error>
+      </span>
+    </li>
+    <li>
+      <span>
+      <h2>Chose your paddock type</h2>
+      <mat-form-field appearance="fill">
+        <mat-label>Select paddock type</mat-label>
+        <mat-select #paddockType  (selectionChange)="onPaddockTypeChange($event)">
+          <mat-option value="crop">Crop</mat-option>
+          <mat-option value="pasture">Pasture</mat-option>
+          <mat-option value="orchard">Orchard</mat-option>
+          <mat-option value="other">Other</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </span>
+    </li>
+    <li *ngIf="crop">
+      <span>
+      <h2>Chose your crop type</h2>
+      <mat-form-field appearance="fill">
+        <mat-label>Select Crop type</mat-label>
+        <mat-select #paddockFill (selectionChange)="onPaddockFillType($event)">
+          <mat-option value="corn">Corn</mat-option>
+          <mat-option value="wheat">Wheat</mat-option>
+          <mat-option value="sorghum">Sorghum</mat-option>
+          <mat-option value="barley">Barley</mat-option>
+        </mat-select>
+      </mat-form-field>
+      </span>
+    </li>
+    <li *ngIf="pasture">
+      <span>
+      <h2>Chose your pasture type</h2>
+      <mat-form-field appearance="fill">
+        <mat-label>Select Crop Type</mat-label>
+        <mat-select #paddockFill (selectionChange)="onPaddockFillType($event)">
+          <mat-option value="modified-pasture">Modified pasture</mat-option>
+          <mat-option value="cover-crop">Cover crop</mat-option>
+          <mat-option value="native-grass">Native grass</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-slide-toggle (change)="onChangeCattle()">Cattle ?</mat-slide-toggle>
+    </span>
+    </li>
+    <li *ngIf="orchard">
+      <span>
+      <h2>Chose your orchard type</h2>
+      <mat-form-field appearance="fill">
+        <mat-label>Select orchard type</mat-label>
+        <mat-select #paddockFill (selectionChange)="onPaddockFillType($event)">
+          <mat-option value="macadamia">Macadamia</mat-option>
+          <mat-option value="avocado">Avocado</mat-option>
+          <mat-option value="oranges">Oranges</mat-option>
+          <mat-option value="apples">Apples</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </span>
+    </li>
+    <li *ngIf="pasture && cattle">
+      <span>
+      <h2>Amount of cattle</h2>
+      <mat-form-field class="cattle-form-field" appearance="fill">
+        <mat-label>Calves</mat-label>
+        <input [(ngModel)]="defaultInputCalves" matInput type="number" #calves min="0" oninput="this.value =
+        !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null">
+      </mat-form-field>
+      <mat-form-field class="cattle-form-field" appearance="fill">
+        <mat-label>Bulls</mat-label>
+        <input [(ngModel)]="defaultInputBulls" matInput type="number" #bulls min="0" oninput="this.value =
+        !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null">
+      </mat-form-field>
+      <mat-form-field class="cattle-form-field" appearance="fill">
+        <mat-label>Heffas</mat-label>
+        <input  [(ngModel)]="defaultInputHeffas" matInput type="number" #heffas min="0" oninput="this.value =
+        !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null">
+      </mat-form-field>
+    </span>
+    </li>
+    <div mat-dialog-actions>
+      <div class="actions-container" fxLayout="row" fxLayoutAlign="space-between center" >
+        <button mat-button [mat-dialog-close]="false">Cancel</button>
+        <button mat-button [disabled]="duplicateFound || !paddockName.value || !paddockType.value " (click)="onClose(paddockName.value)">Create Paddock</button>
+      </div>
+    </div>
+  </ol>
+
+</div>

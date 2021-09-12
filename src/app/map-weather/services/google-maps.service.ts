@@ -1,3 +1,4 @@
+import { CropFill, PaddockType } from './../models/croptype.enum';
 import { FarmService } from './farm.service';
 import { CompletePolygonComponent } from './../home/map/complete-polygon/complete-polygon.component';
 import { Paddock } from './../models/paddock.model';
@@ -8,7 +9,6 @@ import { Polygon, RenderedPolygon } from './../models/polygon.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Injectable } from '@angular/core';
 import { map, Subject } from 'rxjs';
-import { CropType } from '../models/croptype.enum';
 import { MatDialog } from '@angular/material/dialog';
 import { style } from '@angular/animations';
 
@@ -16,7 +16,8 @@ import { style } from '@angular/animations';
   providedIn: 'root'
 })
 export class GoogleMapsService {
-  private currentCropType: CropType;
+  private currentCropFill: CropFill;
+  private currentPaddockType: PaddockType
   private currentCropColor: string;
   private renderedPolygons: RenderedPolygon[] = []
 
@@ -60,7 +61,7 @@ export class GoogleMapsService {
     google.maps.event.addListener(this.map, 'rightclick', () => {
       this.initDrawingTools();
       this.setPolygonListener();
-      this.setCurrentCropType(this.currentCropType);
+      this.setCurrentCropFill(this.currentCropFill);
     })
   }
 
@@ -88,12 +89,32 @@ export class GoogleMapsService {
         });
 
         var polyName: string;
-        var polyOptions: google.maps.PolygonOptions;
+        var paddockType: string;
+        var fillType: string;
+        var paddockData: number[];
+        var polyOptionsFill: google.maps.PolygonOptions;
+        var polyOptionsOutline: google.maps.PolygonOptions;
         dialogRef.afterClosed().subscribe(async result => {
           if (result) {
             polyName = result[0].trim();
-            polyOptions = this.setCurrentCropType(result[1]);
-            polygon.setOptions(polyOptions);
+            fillType = result[4];
+
+            if (result[1]){
+              paddockType = "Crop";
+            } else if (result[2]) {
+              paddockType = "Pasture";
+              paddockData = result[5];
+            } else if (result[3]) {
+              paddockType = "Orchard";
+            } else {
+              paddockType = "Other"
+            }
+
+            polyOptionsFill = this.setCurrentCropFill(fillType);
+            polyOptionsOutline = this.setCurrentOutline(paddockType);
+
+            polygon.setOptions(polyOptionsFill);
+            polygon.setOptions(polyOptionsOutline);
 
             const userId = JSON.parse(localStorage.getItem('user'))['id'];
             var coords = this.convertMvcToArray(polygon.getPath());
@@ -105,7 +126,7 @@ export class GoogleMapsService {
               polygon: polygon
             });
 
-            this.pushPolygonToDb(index, userId, name , coords[0], coords[1], polyOptions.fillColor, polyAreaHa);
+            this.pushPolygonToDb(index, userId, name , coords[0], coords[1], polyOptionsFill.fillColor,  polyOptionsOutline.strokeColor, polyAreaHa, paddockType, fillType, result[6]);
           } else{
             polygon.setMap(null);
             return;
@@ -189,7 +210,7 @@ export class GoogleMapsService {
     return [lat, long];
   }
 
-  pushPolygonToDb(index: number, userId: string, name: string, lat: number[], long: number[], fillColor: string, polyArea: number) {
+  pushPolygonToDb(index: number, userId: string, name: string, lat: number[], long: number[], fillColor: string, outlineColor: string, polyArea: number, paddockType: string, paddockFillType: string, cattleCount: number[]) {
     // this.paddockSerivce.createPolygon(name, long, lat)
     //     .subscribe(res => {
     //       const polygon: Polygon = {
@@ -213,12 +234,16 @@ export class GoogleMapsService {
       lat: lat,
       long: long,
       fillColor: fillColor,
+      outlineColor: outlineColor,
       // polygonApiId: res.toString(),
       polygonApiId: "TEST",
-      polyArea: polyArea
+      polyArea: polyArea,
+      paddockType: paddockType,
+      paddockFillType: paddockFillType,
+      cattleCount: cattleCount
     }
 
-    this.paddockSerivce.getPaddockData("test", index, lat[0], long[0], 1, 1, 1, 1, 1)
+    this.paddockSerivce.getPaddockData("test", index, lat[0], long[0], 1, 1, 1, 1, 1, paddockFillType.toLocaleLowerCase())
         .subscribe((res: Paddock) => this.paddockEntityService.addOneToCache(res));
     this.fireStore.collection('Users')
                   .doc(userId)
@@ -238,7 +263,7 @@ export class GoogleMapsService {
 
     const poly = new google.maps.Polygon({
       paths: paths,
-      strokeColor: "#000000",
+      strokeColor: polygon.outlineColor,
       strokeOpacity: 0.8,
       strokeWeight: 3,
       fillColor: polygon.fillColor,
@@ -263,13 +288,13 @@ export class GoogleMapsService {
    }
   }
 
-  setCurrentCropType(cropType: string){
+  setCurrentCropFill(cropType: string){
     var polyOptions;
     const cropTypeLower = cropType.toLowerCase();
     switch(cropTypeLower) {
       case "corn": {
-        this.currentCropType = CropType.Corn;
-        polyOptions = {editable:false,fillColor:"#dbdb07", strokeColor:'#000000',strokeWeight:2};
+        this.currentCropFill = CropFill.Corn;
+        polyOptions = {editable:false, fillColor:"#dbdb07",strokeWeight:2};
         this.drawingTools.setOptions({
           polygonOptions: polyOptions
         });
@@ -277,8 +302,8 @@ export class GoogleMapsService {
         break;
       }
       case "wheat": {
-        this.currentCropType = CropType.Wheat;
-        polyOptions = {editable:false,fillColor:"#00ba1f", strokeColor:'#000000',strokeWeight:2};
+        this.currentCropFill = CropFill.Wheat;
+        polyOptions = {editable:false, fillColor:"#00ba1f", strokeWeight:2};
         this.drawingTools.setOptions({
           polygonOptions: polyOptions
         });
@@ -286,9 +311,8 @@ export class GoogleMapsService {
         break;
       }
       case "sorghum": {
-        console.log("Setting to sorghum");
-        this.currentCropType = CropType.Sorghum;
-        polyOptions = {editable:false,fillColor:"#00457d", strokeColor:'#000000',strokeWeight:2};
+        this.currentCropFill = CropFill.Sorghum;
+        polyOptions = {editable:false, fillColor:"#00457d", strokeWeight:2};
         this.drawingTools.setOptions({
           polygonOptions: polyOptions
         });
@@ -296,8 +320,8 @@ export class GoogleMapsService {
         break;
       }
       case "barley": {
-        this.currentCropType = CropType.Barley;
-        polyOptions = {editable:false,fillColor:"#680b8c", strokeColor:'#000000',strokeWeight:2};
+        this.currentCropFill = CropFill.Barley;
+        polyOptions = {editable:false, fillColor:"#680b8c", strokeWeight:2};
         this.drawingTools.setOptions({
           polygonOptions: polyOptions
         });
@@ -305,11 +329,51 @@ export class GoogleMapsService {
         break;
       }
       default: {
+        polyOptions = {editable:false, fillColor:"#680b8c", strokeWeight:2};
         break;
       }
     }
 
     return polyOptions;
   }
+
+  setCurrentOutline(paddockType: string){
+    var polyOptions;
+    const paddockTypeLower = paddockType.toLowerCase();
+    switch(paddockTypeLower) {
+      case "crop": {
+        this.currentPaddockType = PaddockType.Crop;
+        polyOptions = {editable:false, strokeColor:"#000000",strokeWeight:2};
+        this.drawingTools.setOptions({
+          polygonOptions: polyOptions
+        });
+        break;
+      }
+      case "pasture": {
+        this.currentPaddockType = PaddockType.Pasture;
+        polyOptions = {editable:false, strokeColor:"#660002", strokeWeight:2};
+        this.drawingTools.setOptions({
+          polygonOptions: polyOptions
+        });
+        break;
+      }
+      case "orchard": {
+        this.currentPaddockType = PaddockType.Orchard;
+        polyOptions = {editable:false, strokeColor:"#000D73", strokeWeight:2};
+        this.drawingTools.setOptions({
+          polygonOptions: polyOptions
+        });
+        break;
+      }
+      default: {
+        this.currentPaddockType = PaddockType.Other;
+        polyOptions = {editable:false, strokeColor:"#074702", strokeWeight:2};
+        break;
+      }
+    }
+
+    return polyOptions;
+  }
+
 
 }

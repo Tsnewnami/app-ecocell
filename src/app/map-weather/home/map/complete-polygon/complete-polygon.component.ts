@@ -16,6 +16,14 @@ export class CompletePolygonComponent implements OnInit {
   polygons$: Observable<Polygon[]>;
   private polygons: Polygon[]
   duplicateFound: boolean = false;
+  crop = false;
+  pasture = false;
+  orchard = false;
+  cattle = false;
+  paddockFill: string = "other";
+  defaultInputCalves = 0;
+  defaultInputBulls = 0;
+  defaultInputHeffas = 0;
 
   constructor(
     private polygonEntityService: PolygonEntityService,
@@ -31,6 +39,26 @@ export class CompletePolygonComponent implements OnInit {
       })
   }
 
+  onClose(paddockName: string): void {
+    this.dialogRef.close([
+      paddockName,
+      this.crop,
+      this.pasture,
+      this.orchard,
+      this.paddockFill,
+      this.cattle,
+      [this.defaultInputBulls, this.defaultInputCalves, this.defaultInputHeffas]
+    ]);
+
+    console.log(paddockName,
+      this.crop,
+      this.pasture,
+      this.orchard,
+      this.paddockFill,
+      this.cattle,
+      [this.defaultInputBulls, this.defaultInputCalves, this.defaultInputHeffas])
+  }
+
   validation(name: string) {
     this.polygons.forEach(polygon => {
       if (polygon.name.replace(/^\s+|\s+$/g, '') === name.trim()) {
@@ -39,6 +67,29 @@ export class CompletePolygonComponent implements OnInit {
         this.duplicateFound = false;
       }
     });
+  }
+
+  onPaddockTypeChange(event) {
+    this.orchard = false;
+    this.crop = false;
+    this.pasture = false;
+
+    if (event.value == 'pasture') {
+      this.pasture = true;
+    } else if (event.value == 'crop') {
+      this.crop = true;
+    } else if (event.value == 'orchard') {
+      this.orchard = true;
+    }
+
+  }
+
+  onChangeCattle() {
+    this.cattle = !this.cattle;
+  }
+
+  onPaddockFillType(event) {
+    this.paddockFill = event.value;
   }
 
 }

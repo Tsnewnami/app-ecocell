@@ -1,3 +1,4 @@
+import { FarmService } from './../../services/farm.service';
 import { Observable } from 'rxjs';
 import { PolygonEntityService } from './../../services/polygon-entity.service';
 import { GoogleMapsPolygonService } from './../../services/google-maps-polygon.service';
@@ -27,7 +28,8 @@ export class MapComponent implements OnInit {
   constructor(
     private googleMapsService: GoogleMapsService,
     private googleMapsPolygonService: GoogleMapsPolygonService,
-    private polygonEntityService: PolygonEntityService
+    private polygonEntityService: PolygonEntityService,
+    private farmService: FarmService
   ) { }
 
   ngOnInit(){
@@ -47,7 +49,7 @@ export class MapComponent implements OnInit {
     }
 
 
-    this.googleMapsService.setCurrentCropType(event.value)
+    this.googleMapsService.setCurrentCropFill(event.value)
   }
 
   drawPolygon() {
@@ -75,6 +77,10 @@ export class MapComponent implements OnInit {
 
   toggleSideBar() {
     this.opened = !this.opened;
+  }
+
+  onNavigateHome() {
+    this.googleMapsService.panTo(this.farmService.getCurrentFarm().regionLat, this.farmService.getCurrentFarm().regionLong)
   }
 
 }

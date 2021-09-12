@@ -1,0 +1,130 @@
+.container{
+  width: 381px;
+  height: 787px;
+}
+
+h1 {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 32px;
+  /* identical to box height, or 160% */
+
+  letter-spacing: 0.25px;
+
+  /* black/0.87 */
+
+  color: rgba(0, 0, 0, 0.87);
+
+}
+
+h2 {
+font-style: normal;
+font-weight: 500;
+font-size: 16px;
+line-height: 32px;
+/* identical to box height, or 200% */
+
+letter-spacing: 0.25px;
+
+/* black/0.6 */
+
+color: rgba(0, 0, 0, 0.6);
+
+
+/* Inside Auto Layout */
+
+}
+
+mat-form-field{
+  width: 289px;
+  height: 56px;
+  left: 0px;
+  top: 0px;
+
+  /* black/0.06 */
+
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 4px 4px 0px 0px;
+
+  /* Inside Auto Layout */
+
+  flex: none;
+  order: 0;
+  align-self: stretch;
+  flex-grow: 0;
+  margin: 0px 0px;
+}
+
+::ng-deep.mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-bar {
+  background-color: #3CB15D;;
+}
+
+::ng-deep.mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-thumb {
+  background-color: #3CB15D;;
+}
+
+
+
+
+li {
+  margin-bottom: 16px;
+  padding-left: 1.3em;
+}
+
+li span {
+  position: relative;
+  left: 24px;
+}
+
+ol {
+  list-style-position: outside;
+  padding: 0;
+}
+
+.paddock-ol {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.paddock-ol li {
+  counter-increment: step-counter;
+  margin-bottom: 5px;
+}
+
+li:before{
+  content: counter(step-counter);
+
+  margin-right: 20px;
+  font-size: 80%;
+  color: white;
+  font-weight: bold;
+  padding: 8px 12px;
+  margin-left: -24px; /* same as padding-left set on li */
+  width: 1.3em; /* same as padding-left set on li */
+  background: #3CB15D;
+  border-radius: 32px;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 20px;
+  /* identical to box height, or 167% */
+
+  letter-spacing: 0.4px;
+
+  /* shades/white */
+
+  color: #FFFFFF;
+}
+
+.mat-dialog-actions {
+  margin-left: 130px;
+  margin-right: 300px;
+}
+
+
+
+
+
+

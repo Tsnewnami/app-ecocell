@@ -31,8 +31,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatIconModule } from '@angular/material/icon';
-import { PaddockDetailsComponent } from './home/map/paddock-details/paddock-details.component';
 import { comparePaddock, Paddock } from './models/paddock.model';
 import { PaddockEntityService } from './services/paddock-entity.service';
 import { PaddockApiService } from './services/paddock-api.service';
@@ -40,6 +40,7 @@ import { CreateFarmComponent } from './create-farm/create-farm.component';
 import { FarmDialogComponent } from './create-farm/farm-dialog/farm-dialog.component';
 import { compareFarms, Farm } from './models/farm.model';
 import { MapHomeComponent } from './home/map-home/map-home.component';
+
 
 const entityMetaData :EntityMetadataMap = {
   Polygon: {
@@ -97,12 +98,12 @@ export const mapWeatherRoutes: Routes = [
       FlexLayoutModule,
       MatToolbarModule,
       MatTabsModule,
-      MatExpansionModule
+      MatExpansionModule,
+      MatSlideToggleModule
   ],
   declarations: [HomeComponent,
      MapComponent,
      PolygonListComponent,
-     PaddockDetailsComponent,
      CompletePolygonComponent,
      CreateFarmComponent,
      FarmDialogComponent,

@@ -5,8 +5,12 @@ export interface Polygon{
   lat: number[];
   long: number[];
   fillColor: string;
+  outlineColor: string;
   polygonApiId: string;
   polyArea: number;
+  paddockType: string;
+  paddockFillType: string;
+  cattleCount: number[];
 }
 
 export interface RenderedPolygon{

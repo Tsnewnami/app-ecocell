@@ -28,7 +28,9 @@ export class PaddockApiService {
     endTimeSoil: number,
     startTimeAcc: number,
     endTimeAcc: number,
-    temperatureThresh: number): Observable<Paddock> {
+    temperatureThresh: number,
+    polyFillType: string,
+    ): Observable<Paddock> {
 
     const data = {
       'polyId': '612db75ea81b765fd867eee3',
@@ -39,7 +41,8 @@ export class PaddockApiService {
       'endTimeSoil': endTimeSoil,
       'startTimeAcc': startTimeAcc,
       'endTimeAcc': endTimeAcc,
-      'temperatureThresh': temperatureThresh
+      'temperatureThresh': temperatureThresh,
+      'polyFillType': polyFillType
     }
 
     return this.httpClient.post('http://localhost:5001/app-ecocell/us-central1/paddockDataApi/all-paddock-data', data)
@@ -49,7 +52,9 @@ export class PaddockApiService {
                     index: res['index'],
                     soilData: res['soilData'],
                     weatherData: res['weatherData'],
-                    polygonApiId: res['polygonApiId']
+                    polygonApiId: res['polygonApiId'],
+                    healthStatus: res['healthStatus'],
+                    nvdiData: res['nvdiData']
                   })
                 })
               );

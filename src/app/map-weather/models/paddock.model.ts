@@ -3,6 +3,8 @@ export interface Paddock{
   soilData: number[];
   weatherData: number[];
   polygonApiId: string;
+  healthStatus: string;
+  nvdiData: number[];
 }
 
 export function comparePaddock(pD1: Paddock, pD2:Paddock) {

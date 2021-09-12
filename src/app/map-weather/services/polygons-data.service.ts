@@ -39,8 +39,12 @@ export class PolygonsDataService extends DefaultDataService<Polygon>{
             lat: doc.payload.doc.data()['lat'],
             long: doc.payload.doc.data()['long'],
             fillColor: doc.payload.doc.data()['fillColor'],
+            outlineColor: doc.payload.doc.data()['outLineColor'],
             polygonApiId: doc.payload.doc.data()['polygonApiId'],
-            polyArea: doc.payload.doc.data()['polyArea']
+            polyArea: doc.payload.doc.data()['polyArea'],
+            paddockType: doc.payload.doc.data()['paddockType'],
+            paddockFillType: doc.payload.doc.data()['paddockFillType'],
+            cattleCount: doc.payload.doc.data()['cattleCount'],
          }
       );
       });
