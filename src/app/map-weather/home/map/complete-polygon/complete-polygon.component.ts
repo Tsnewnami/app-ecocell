@@ -24,6 +24,9 @@ export class CompletePolygonComponent implements OnInit {
   defaultInputCalves = 0;
   defaultInputBulls = 0;
   defaultInputHeffas = 0;
+  defaultCroptype = "corn";
+  defaultPastureType = "modified-pasture";
+  defaultOrchardType = "macadamia";
 
   constructor(
     private polygonEntityService: PolygonEntityService,

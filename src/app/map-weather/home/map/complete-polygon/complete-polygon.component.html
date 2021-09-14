@@ -29,7 +29,7 @@
       <h2>Chose your crop type</h2>
       <mat-form-field appearance="fill">
         <mat-label>Select Crop type</mat-label>
-        <mat-select #paddockFill (selectionChange)="onPaddockFillType($event)">
+        <mat-select #paddockFill [(value)]="defaultCroptype"  (selectionChange)="onPaddockFillType($event)">
           <mat-option value="corn">Corn</mat-option>
           <mat-option value="wheat">Wheat</mat-option>
           <mat-option value="sorghum">Sorghum</mat-option>
@@ -43,7 +43,7 @@
       <h2>Chose your pasture type</h2>
       <mat-form-field appearance="fill">
         <mat-label>Select Crop Type</mat-label>
-        <mat-select #paddockFill (selectionChange)="onPaddockFillType($event)">
+        <mat-select #paddockFill [(value)]="defaultPastureType" (selectionChange)="onPaddockFillType($event)">
           <mat-option value="modified-pasture">Modified pasture</mat-option>
           <mat-option value="cover-crop">Cover crop</mat-option>
           <mat-option value="native-grass">Native grass</mat-option>
@@ -57,7 +57,7 @@
       <h2>Chose your orchard type</h2>
       <mat-form-field appearance="fill">
         <mat-label>Select orchard type</mat-label>
-        <mat-select #paddockFill (selectionChange)="onPaddockFillType($event)">
+        <mat-select #paddockFill [(value)]="defaultOrchardType" (selectionChange)="onPaddockFillType($event)">
           <mat-option value="macadamia">Macadamia</mat-option>
           <mat-option value="avocado">Avocado</mat-option>
           <mat-option value="oranges">Oranges</mat-option>

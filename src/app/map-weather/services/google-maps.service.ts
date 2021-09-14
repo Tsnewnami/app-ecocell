@@ -97,13 +97,12 @@ export class GoogleMapsService {
         var polyOptionsFill: google.maps.PolygonOptions;
         var polyOptionsOutline: google.maps.PolygonOptions;
         dialogRef.afterClosed().subscribe(async result => {
-          const spinnerDialogRef =  this.dialog.open(LoadingSpinnerComponent, {
-          });
-          setTimeout(() => {
-           spinnerDialogRef.close()
-          }, 4000);
-
           if (result) {
+            const spinnerDialogRef =  this.dialog.open(LoadingSpinnerComponent, {
+            });
+            setTimeout(() => {
+             spinnerDialogRef.close()
+            }, 4000);
             polyName = result[0].trim();
             fillType = result[4];
 
