@@ -5,7 +5,7 @@
       <h1>F . I . N</h1>
       <div class="header-underline"> </div>
       <mat-list role="list">
-      <mat-list-item role="listitem"> <mat-icon class="add">add</mat-icon> <a [routerLink]="['/app']">Home</a></mat-list-item>
+      <mat-list-item role="listitem"> <mat-icon class="add">add</mat-icon> <a (click)="onNavigateHome()" [routerLink]="['/app']">Home</a></mat-list-item>
       </mat-list>
     </mat-drawer>
   <mat-drawer-content>

@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Polygon } from '../../models/polygon.model';
 import { PolygonEntityService } from '../../services/polygon-entity.service';
+import { PaddockEntityService } from '../../services/paddock-entity.service';
 
 @Component({
   selector: 'app-map-home',
@@ -18,7 +19,9 @@ export class MapHomeComponent implements OnInit {
   constructor(
     private polygonEntityService: PolygonEntityService,
     private route: ActivatedRoute,
-    private farmService: FarmService) { }
+    private farmService: FarmService,
+    private paddockEntityService: PaddockEntityService,
+    private polygonEntitiyService: PolygonEntityService) { }
 
   ngOnInit(): void {
     this.reload();
@@ -28,6 +31,12 @@ export class MapHomeComponent implements OnInit {
 
   reload() {
     this.polygons$ = this.polygonEntityService.entities$
+  }
+
+  onNavigateHome() {
+    this.farmService.setCurrentFarm(null);
+    this.paddockEntityService.clearCache();
+    this.polygonEntitiyService.clearCache();
   }
 
 }

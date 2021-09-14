@@ -22,6 +22,7 @@ export class PolygonsDataService extends DefaultDataService<Polygon>{
 
   getAll(): Observable<Polygon[]> {
     const userId = JSON.parse(localStorage.getItem('user'))['id'];
+    console.log(this.farmService.getCurrentFarm().name)
     return this.fireStore
     .collection('Users')
     .doc(userId)
