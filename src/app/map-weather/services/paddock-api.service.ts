@@ -33,7 +33,7 @@ export class PaddockApiService {
     ): Observable<Paddock> {
 
     const data = {
-      'polyId': '612db75ea81b765fd867eee3',
+      'polyId': polyId,
       'polyIndex': polyIndex,
       'lat': lat,
       'long': long,
@@ -45,7 +45,7 @@ export class PaddockApiService {
       'polyFillType': polyFillType
     }
 
-    return this.httpClient.post('http://localhost:5001/app-ecocell/us-central1/paddockDataApi/all-paddock-data', data)
+    return this.httpClient.post('https://us-central1-app-ecocell.cloudfunctions.net/paddockDataApi/all-paddock-data', data)
               .pipe(
                 map(res => {
                   return({

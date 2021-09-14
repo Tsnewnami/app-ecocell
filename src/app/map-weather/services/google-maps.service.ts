@@ -32,6 +32,7 @@ export class GoogleMapsService {
     private paddockEntityService: PaddockEntityService,
     private dialog: MatDialog,
     private farmService: FarmService,
+    private paddockApiService: PaddockApiService
   ) {}
 
   initDrawingTools(){
@@ -65,7 +66,7 @@ export class GoogleMapsService {
     })
   }
 
-  setInfoWindowListener() {
+  setInfoWindowListener() { // Unused
     google.maps.event.addListener(this.map, 'click', function(event) {
       console.log(event)
       // this.infowindow.setContent("this is an infowindow<br>on letter " + event.feature.getProperty('letter'));
@@ -76,7 +77,7 @@ export class GoogleMapsService {
 
   setPolygonListener(){
     google.maps.event.addListener(this.drawingTools,'polygoncomplete',(polygon: google.maps.Polygon) => {
-      const haLimit = 40000000000;
+      const haLimit = 3000;
       const polyAreaHa = google.maps.geometry.spherical.computeArea(polygon.getPath()) / 10000;
 
       if (polyAreaHa > haLimit){
@@ -211,47 +212,59 @@ export class GoogleMapsService {
   }
 
   pushPolygonToDb(index: number, userId: string, name: string, lat: number[], long: number[], fillColor: string, outlineColor: string, polyArea: number, paddockType: string, paddockFillType: string, cattleCount: number[]) {
-    // this.paddockSerivce.createPolygon(name, long, lat)
-    //     .subscribe(res => {
-    //       const polygon: Polygon = {
-    //         index: index,
-    //         userId: userId,
-    //         name: name,
-    //         lat: lat,
-    //         long: long,
-    //         fillColor: fillColor,
-    //         // polygonApiId: res.toString(),
-    //         polygonApiId: "TEST"
-    //       }
+    this.paddockApiService.createPaddock(name, long, lat)
+        .subscribe(res => {
+          const polygon: Polygon = {
+            index: index,
+            userId: userId,
+            name: name,
+            lat: lat,
+            long: long,
+            fillColor: fillColor,
+            outlineColor: outlineColor,
+            polygonApiId: res.toString(),
+            polyArea: polyArea,
+            paddockType: paddockType,
+            paddockFillType: paddockFillType,
+            cattleCount: cattleCount
+          }
 
-    //       this.fireStore.collection('userPolygons').doc(userId).collection('polygons').doc(name).set(polygon);
-    //     })
-
-    const polygon: Polygon = {
-      index: index,
-      userId: userId,
-      name: name,
-      lat: lat,
-      long: long,
-      fillColor: fillColor,
-      outlineColor: outlineColor,
-      // polygonApiId: res.toString(),
-      polygonApiId: "TEST",
-      polyArea: polyArea,
-      paddockType: paddockType,
-      paddockFillType: paddockFillType,
-      cattleCount: cattleCount
-    }
-
-    this.paddockSerivce.getPaddockData("test", index, lat[0], long[0], 1, 1, 1, 1, 1, paddockFillType.toLocaleLowerCase())
-        .subscribe((res: Paddock) => this.paddockEntityService.addOneToCache(res));
-    this.fireStore.collection('Users')
+          this.paddockSerivce.getPaddockData(res.toString(), index, lat[0], long[0], 1, 1, 1, 1, 1, paddockFillType.toLocaleLowerCase())
+              .subscribe((res: Paddock) => this.paddockEntityService.addOneToCache(res));
+          this.fireStore.collection('Users')
                   .doc(userId)
                   .collection('Farms')
                   .doc(this.farmService.getCurrentFarm().name)
                   .collection('Polygons')
                   .doc(polygon.name)
                   .set(polygon);
+        })
+
+    // const polygon: Polygon = {
+    //   index: index,
+    //   userId: userId,
+    //   name: name,
+    //   lat: lat,
+    //   long: long,
+    //   fillColor: fillColor,
+    //   outlineColor: outlineColor,
+    //   // polygonApiId: res.toString(),
+    //   polygonApiId: "TEST",
+    //   polyArea: polyArea,
+    //   paddockType: paddockType,
+    //   paddockFillType: paddockFillType,
+    //   cattleCount: cattleCount
+    // }
+
+    // this.paddockSerivce.getPaddockData("test", index, lat[0], long[0], 1, 1, 1, 1, 1, paddockFillType.toLocaleLowerCase())
+    //     .subscribe((res: Paddock) => this.paddockEntityService.addOneToCache(res));
+    // this.fireStore.collection('Users')
+    //               .doc(userId)
+    //               .collection('Farms')
+    //               .doc(this.farmService.getCurrentFarm().name)
+    //               .collection('Polygons')
+    //               .doc(polygon.name)
+    //               .set(polygon);
   }
 
   createPolygon(polygon: Polygon, index: number) {

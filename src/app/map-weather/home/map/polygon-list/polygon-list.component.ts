@@ -1,3 +1,4 @@
+import { PaddockApiService } from './../../../services/paddock-api.service';
 import { PaddockEntityService } from './../../../services/paddock-entity.service';
 import { Paddock } from './../../../models/paddock.model';
 import { PolygonEntityService } from './../../../services/polygon-entity.service';
@@ -32,7 +33,8 @@ export class PolygonListComponent implements OnInit {
   constructor(
     private googleMapsService: GoogleMapsService,
     private polygonEntityService: PolygonEntityService,
-    private paddockEntityService: PaddockEntityService) { }
+    private paddockEntityService: PaddockEntityService,
+    private paddockApiService: PaddockApiService) { }
 
   ngOnInit(): void {
       this.paddocks$ = this.paddockEntityService.entities$
@@ -58,17 +60,18 @@ export class PolygonListComponent implements OnInit {
     this.polygonSelected.emit(polygon);
   }
 
-  onClearPolygon(polygon: Polygon){
+  onClearPolygonAndPaddockDetails(polygon: Polygon, paddock: Paddock){
     const polyIndex = polygon.index;
     this.polygonChanged.emit();
     this.polygonDeleted.emit();
     this.googleMapsService.deletePolygon(polyIndex);
-    // this.paddockService.deletePolygon(polygon.polygonApiId)
-    //   .subscribe(res => {
-    //     this.polygonEntityService.removeOneFromCache(polygon);
-    //     this.polygonEntityService.delete(polygon.name);
-    //   })
-    this.polygonEntityService.removeOneFromCache(polygon);
-    this.polygonEntityService.delete(polygon.name);
+    this.paddockApiService.deletePaddock(polygon.polygonApiId)
+      .subscribe(res => {
+        this.polygonEntityService.removeOneFromCache(polygon);
+        this.paddockEntityService.removeOneFromCache(paddock);
+        this.polygonEntityService.delete(polygon.name);
+      })
+    // this.polygonEntityService.removeOneFromCache(polygon);
+    // this.polygonEntityService.delete(polygon.name);
   }
 }

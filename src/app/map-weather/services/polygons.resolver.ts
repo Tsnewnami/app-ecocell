@@ -35,7 +35,7 @@ export class PolygonsResolver implements Resolve<boolean>{
           if (polygons.length == 0) {
             return of({});
           } else {
-            const observables = polygons.map(polygon => this.paddockService.getPaddockData("test", polygon.index, polygon.lat[0], polygon.long[0], 1, 1, 1, 1, 1, polygon.paddockFillType))
+            const observables = polygons.map(polygon => this.paddockService.getPaddockData(polygon.polygonApiId, polygon.index, polygon.lat[0], polygon.long[0], 1, 1, 1, 1, 1, polygon.paddockFillType))
 
             return forkJoin(observables)
             .pipe(

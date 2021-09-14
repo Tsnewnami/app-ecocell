@@ -2,7 +2,7 @@
   position: absolute;
   width: 4px;
   /* height: 240px; */
-  height: 310px;
+  height: 280px;
 
   margin-top: 170px;
   margin-left: -113px;
@@ -93,8 +93,7 @@ li {
   margin: 2px 0px;
 }
 
-span {
-  font-family: Roboto;
+.li-span {
   font-style: normal;
   font-weight: normal;
   color: rgb(147, 154, 165);
@@ -116,4 +115,12 @@ span {
 ::ng-deep .mat-list-item {
   margin-top: -4px;
   padding-bottom: 285px !important;
+}
+
+.healthy-span{
+  color: #3CB15D;
+}
+
+.unhealthy-span{
+  color: #c55f00;
 }

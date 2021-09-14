@@ -1,36 +1,3 @@
-<!-- <mat-selection-list #polygons_ [multiple]="false">
-  <mat-list-option *ngFor="let polygon of polygons" [value]="polygon">
-    <div style="display:flex; justify-content:space-between;align-items:center">
-    <button (click)="onPolyClick(polygon)">{{polygon.name}}</button>
-    <div>
-      <button mat-icon-button>
-        <mat-icon (click)="onClearPolygon(polygon)">clear</mat-icon>
-      </button>
-    </div>
-  </div>
-  </mat-list-option>
-</mat-selection-list> -->
-
-    <!-- <div class="paddocks" fxLayout="row" fxLayoutAlign="center"  *ngFor="let polygon of polygons">
-      <div class="vertical-line" ></div>
-      <div class="paddock-content">
-        <h1> {{polygon.name}}</h1>
-        <ul>
-          <li><h2>Paddock type:</h2></li>
-            <li><h2>Content:</h2></li>
-            <li><h2>Size:</h2></li>
-            <li><h2>Soil moisture:</h2></li>
-            <li><h2>Soil temperature:</h2></li>
-            <li><h2>Local temperature:</h2></li>
-            <li><h2>Crop health:</h2></li>
-        </ul>
-      </div>
-      <div class="paddock-actions">
-        <a id="edit-polygon">edit</a>
-      </div>
-      <mat-divider id="paddock-divider" style="width: 227px; position: absolute;"></mat-divider>
-    </div> -->
-
 <mat-list id="poly-mat-list">
   <mat-list-item *ngFor="let polygon of polygons; let i = index" >
     <div *ngIf="polygon.paddockType == 'Crop'" id="crop" class="vertical-line" ></div>
@@ -40,20 +7,21 @@
     <div class="container">
       <div class="row-one" >
         <h1 (click)="onPolyClick(polygon)"> {{polygon.name}}</h1>
-        <a (click)="onClearPolygon(polygon)">edit</a>
+        <a (click)="onClearPolygonAndPaddockDetails(polygon, paddocks[i])">edit</a>
       </div>
       <div class="row-two" *ngIf="(paddocks$  |async)">
         <ul>
-          <li>{{polygon.paddockType}}: <span> {{polygon.paddockFillType}}</span></li>
-          <li>Area: <span> {{ polygon.polyArea.toFixed(2)}} Ha </span></li>
-          <li>Soil Moisture: <span> {{paddocks[i].soilData[1]}} m<sup>3</sup> &#8725; m<sup>3</sup> </span> </li>
-          <li>Soil temperature: <span> {{paddocks[i].soilData[2]}} &deg;C </span></li>
-          <li>Local temperature: <span> {{paddocks[i].weatherData[0]}} &deg;C</span> </li>
-          <li *ngIf="polygon.paddockType == 'Pasture'">Average NVDI Index: <span> {{paddocks[i].nvdiData[0].toFixed(2)}}</span> </li>
-          <li *ngIf="polygon.paddockType == 'Pasture'">Bull count: <span> {{polygon.cattleCount[0]}}</span> </li>
-          <li *ngIf="polygon.paddockType == 'Pasture'">Calf count: <span> {{polygon.cattleCount[1]}}</span> </li>
-          <li *ngIf="polygon.paddockType == 'Pasture'">Heffa count: <span> {{polygon.cattleCount[2]}}</span> </li>
-          <li *ngIf="polygon.paddockType != 'Pasture'">Crop Health: {{paddocks[i].healthStatus}}</li>
+          <li>{{polygon.paddockType}}: <span class="li-span"> {{polygon.paddockFillType}}</span></li>
+          <li>Area: <span class="li-span"> {{ polygon.polyArea.toFixed(2)}} Ha </span></li>
+          <li>Soil Moisture: <span class="li-span"> {{paddocks[i].soilData[1]}} m<sup>3</sup> &#8725; m<sup>3</sup> </span> </li>
+          <li *ngIf="polygon.paddockType != 'Pasture'">Soil temperature: <span class="li-span"> {{paddocks[i].soilData[2]}} &deg;C </span></li>
+          <li>Local temperature: <span class="li-span"> {{paddocks[i].weatherData[0]}} &deg;C</span> </li>
+          <li *ngIf="polygon.paddockType == 'Pasture' && polygon.cattleCount[0] > 0">Average NVDI Index: <span class="li-span"> {{paddocks[i].nvdiData[0].toFixed(2)}}</span> </li>
+          <li *ngIf="polygon.paddockType == 'Pasture' && polygon.cattleCount[1] > 0">Bull count: <span class="li-span"> {{polygon.cattleCount[0]}}</span> </li>
+          <li *ngIf="polygon.paddockType == 'Pasture' && polygon.cattleCount[2] > 0">Calf count: <span class="li-span" > {{polygon.cattleCount[1]}}</span> </li>
+          <li *ngIf="polygon.paddockType == 'Pasture'">Heffa count: <span class="li-span"> {{polygon.cattleCount[2]}}</span> </li>
+          <li id="healthy" *ngIf="polygon.paddockType != 'Pasture' && paddocks[i].healthStatus == 'healthy'">Crop Health: <span class="healthy-span">{{paddocks[i].healthStatus}}</span></li>
+          <li id="unhealthy" *ngIf="polygon.paddockType != 'Pasture' && paddocks[i].healthStatus != 'healthy'">Crop Health: <span class="unhealthy-span">{{paddocks[i].healthStatus}}</span></li>
         </ul>
       </div>
     </div>
