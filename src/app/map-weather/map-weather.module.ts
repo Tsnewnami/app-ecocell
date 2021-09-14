@@ -24,6 +24,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { PolygonListComponent } from './home/map/polygon-list/polygon-list.component';
@@ -40,6 +41,7 @@ import { CreateFarmComponent } from './create-farm/create-farm.component';
 import { FarmDialogComponent } from './create-farm/farm-dialog/farm-dialog.component';
 import { compareFarms, Farm } from './models/farm.model';
 import { MapHomeComponent } from './home/map-home/map-home.component';
+import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
 
 
 const entityMetaData :EntityMetadataMap = {
@@ -99,7 +101,8 @@ export const mapWeatherRoutes: Routes = [
       MatToolbarModule,
       MatTabsModule,
       MatExpansionModule,
-      MatSlideToggleModule
+      MatSlideToggleModule,
+      MatProgressSpinnerModule
   ],
   declarations: [HomeComponent,
      MapComponent,
@@ -107,7 +110,8 @@ export const mapWeatherRoutes: Routes = [
      CompletePolygonComponent,
      CreateFarmComponent,
      FarmDialogComponent,
-     MapHomeComponent],
+     MapHomeComponent,
+     LoadingSpinnerComponent],
   exports: [
     HomeComponent,
   ]

@@ -49,14 +49,6 @@ export class CompletePolygonComponent implements OnInit {
       this.cattle,
       [this.defaultInputBulls, this.defaultInputCalves, this.defaultInputHeffas]
     ]);
-
-    console.log(paddockName,
-      this.crop,
-      this.pasture,
-      this.orchard,
-      this.paddockFill,
-      this.cattle,
-      [this.defaultInputBulls, this.defaultInputCalves, this.defaultInputHeffas])
   }
 
   validation(name: string) {
@@ -90,6 +82,10 @@ export class CompletePolygonComponent implements OnInit {
 
   onPaddockFillType(event) {
     this.paddockFill = event.value;
+  }
+
+  onDialogClose() {
+    this.dialogRef.close();
   }
 
 }

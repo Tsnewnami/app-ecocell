@@ -1,3 +1,4 @@
+import { LoadingSpinnerComponent } from './../loading-spinner/loading-spinner.component';
 import { CropFill, PaddockType } from './../models/croptype.enum';
 import { FarmService } from './farm.service';
 import { CompletePolygonComponent } from './../home/map/complete-polygon/complete-polygon.component';
@@ -9,7 +10,7 @@ import { Polygon, RenderedPolygon } from './../models/polygon.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Injectable } from '@angular/core';
 import { map, Subject } from 'rxjs';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { style } from '@angular/animations';
 
 @Injectable({
@@ -96,6 +97,12 @@ export class GoogleMapsService {
         var polyOptionsFill: google.maps.PolygonOptions;
         var polyOptionsOutline: google.maps.PolygonOptions;
         dialogRef.afterClosed().subscribe(async result => {
+          const spinnerDialogRef =  this.dialog.open(LoadingSpinnerComponent, {
+          });
+          setTimeout(() => {
+           spinnerDialogRef.close()
+          }, 4000);
+
           if (result) {
             polyName = result[0].trim();
             fillType = result[4];
