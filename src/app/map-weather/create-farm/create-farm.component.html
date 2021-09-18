@@ -1,6 +1,6 @@
 <h1>Your Farms</h1>
 <div class="underline"></div>
-<div class="farm-card-list" fxLayout fxLayoutGap="21px">
+<div *ngIf="!showOverlay" class="farm-card-list" fxLayout fxLayoutGap="21px">
   <mat-card *ngFor="let farm of farms$ | async" class="farm-card" fxLayout="column" fxLayoutAlign="space-between center">
     <div class="image-container" fxLayout="column" fxLayoutAlign="center center">
       <img mat-card-image src="assets/images/farm-card-icon.png" id="farm-icon" >
@@ -34,3 +34,8 @@
   </mat-card>
 </div>
 
+<div class="spinner-div" *ngIf="showOverlay" fxLayout="column" fxLayoutAlign = "center center" >
+  <h1>Loading your farm....</h1>
+  <mat-spinner  style="margin:0 auto;"
+  mode="indeterminate"></mat-spinner>
+</div>

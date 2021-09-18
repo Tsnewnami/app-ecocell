@@ -6,7 +6,7 @@ import { FarmDialogComponent } from './farm-dialog/farm-dialog.component';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { FarmService } from '../services/farm.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router, RouterEvent } from '@angular/router';
 import { map, Observable, forkJoin, tap, of, concatMap, delay } from 'rxjs';
 import { Farm } from '../models/farm.model';
 import { Polygon } from '../models/polygon.model';
@@ -22,6 +22,7 @@ import { RESET } from '@ngrx/store-devtools/src/actions';
 })
 export class CreateFarmComponent implements OnInit {
   farms$: Observable<Farm[]>;
+  public showOverlay = true;
 
   constructor(
     private dialog: MatDialog,
@@ -32,10 +33,31 @@ export class CreateFarmComponent implements OnInit {
     private fireStore: AngularFirestore,
     private paddockApiService: PaddockApiService,
     private polygonEntityService: PolygonEntityService,
-  ) { }
+  ) {
+    router.events.subscribe((event: RouterEvent) => {
+      this.navigationInterceptor(event)
+    })
+  }
 
   ngOnInit(): void {
     this.farms$ = this.farmEntityService.entities$;
+  }
+
+  navigationInterceptor(event: RouterEvent): void {
+    if (event instanceof NavigationStart) {
+      this.showOverlay = true;
+    }
+    if (event instanceof NavigationEnd) {
+      this.showOverlay = false;
+    }
+
+    // Set loading state to false in both of the below events to hide the spinner in case a request fails
+    if (event instanceof NavigationCancel) {
+      this.showOverlay = false;
+    }
+    if (event instanceof NavigationError) {
+      this.showOverlay = false;
+    }
   }
 
   onCreateFarm() {

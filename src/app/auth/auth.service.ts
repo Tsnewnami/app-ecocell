@@ -28,14 +28,14 @@ export class AuthService {
     }
 
   async login(email: string, password: string){
-
+    this.isLoading.next(true);
     this.auth.setPersistence(firebase.auth.Auth.Persistence.SESSION).then(
       () =>
       this.auth.signInWithEmailAndPassword(
         email,
         password
       ).then(result => {
-        this.isLoading.next(true);
+
         const userAction: User = {id: result.user.uid, email: result.user.email}
 
         if(!result.user.emailVerified)
@@ -49,6 +49,7 @@ export class AuthService {
         this.router.navigate(['/app']);
       })
       .catch(err => {
+        this.isLoading.next(false);
         this.snackBar.open(this.parseError(err.code), null, {duration :6000});
       })
     );
@@ -72,8 +73,7 @@ export class AuthService {
 
   logout() {
     return this.auth.signOut()
-      .then(res => {
-        console.log(res);
+      .then(() => {
         localStorage.removeItem('user');
         this.router.navigate(['/']);
       })

@@ -6,6 +6,8 @@ import { GoogleMapsService } from './../../../services/google-maps.service';
 import { Component, Input, OnInit, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
 import { Polygon } from 'src/app/map-weather/models/polygon.model';
 import { Observable } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { LoadingSpinnerComponent } from 'src/app/map-weather/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-polygon-list',
@@ -34,7 +36,8 @@ export class PolygonListComponent implements OnInit {
     private googleMapsService: GoogleMapsService,
     private polygonEntityService: PolygonEntityService,
     private paddockEntityService: PaddockEntityService,
-    private paddockApiService: PaddockApiService) { }
+    private paddockApiService: PaddockApiService,
+    private dialog: MatDialog) { }
 
   ngOnInit(): void {
       this.paddocks$ = this.paddockEntityService.entities$
@@ -61,6 +64,13 @@ export class PolygonListComponent implements OnInit {
   }
 
   onClearPolygonAndPaddockDetails(polygon: Polygon, paddock: Paddock){
+      const spinnerDialogRef =  this.dialog.open(LoadingSpinnerComponent, {
+    });
+
+    setTimeout(() => {
+       spinnerDialogRef.close();
+    }, 4000);
+
     const polyIndex = polygon.index;
     this.polygonChanged.emit();
     this.polygonDeleted.emit();
