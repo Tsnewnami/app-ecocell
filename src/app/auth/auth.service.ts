@@ -82,4 +82,10 @@ export class AuthService {
       })
   }
 
+  resetPasswordInit(email: string) {
+    return this.auth.sendPasswordResetEmail(
+      email,
+      { url: 'https://app-ecocell.web.app/' });
+    }
+
 }

@@ -32,7 +32,7 @@
     <mat-error *ngIf="pwInput1.errors?.minlength">Password must be atleast 6 characters long</mat-error>
     <button  fxLayout fxLayoutAlign="center center" type="submit" mat-button [disabled]="!f.valid"><h2>Login</h2></button>
     <a [routerLink]="['/signup']"><h3>Create Account</h3></a>
-    <h4>Forgot your password?</h4>
+    <a [routerLink]="['/resetpassword']"><h4>Forgot your password?</h4></a>
   </form>
   </section>
 </div>

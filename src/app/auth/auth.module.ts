@@ -25,6 +25,7 @@ import { EffectsModule } from '@ngrx/effects'
 import { AuthEffects } from './auth.effect';;
 import * as fromAuth from './reducers';
 import { EmailVerificationComponent } from './email-verification/email-verification.component';
+import { ResetpasswordComponent } from './resetpassword/resetpassword.component';
 
 @NgModule({
   imports: [
@@ -39,7 +40,8 @@ import { EmailVerificationComponent } from './email-verification/email-verificat
       MatIconModule,
       RouterModule.forChild([
         {path: '', component: LoginComponent},
-        {path: 'signup', component: SignupComponent}
+        {path: 'signup', component: SignupComponent},
+        {path: 'resetpassword', component: ResetpasswordComponent}
       ]),
       MatTabsModule,
       MatFormFieldModule,
@@ -50,7 +52,7 @@ import { EmailVerificationComponent } from './email-verification/email-verificat
       EffectsModule.forFeature([AuthEffects]),
 
   ],
-  declarations: [HomepageComponent, HeaderComponent, LoginComponent, SignupComponent, EmailVerificationComponent],
+  declarations: [HomepageComponent, HeaderComponent, LoginComponent, SignupComponent, EmailVerificationComponent, ResetpasswordComponent,],
   exports: [HomepageComponent, HeaderComponent, LoginComponent, SignupComponent]
 })
 
