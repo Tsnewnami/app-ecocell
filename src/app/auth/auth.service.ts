@@ -70,4 +70,16 @@ export class AuthService {
     })
   }
 
+  logout() {
+    return this.auth.signOut()
+      .then(res => {
+        console.log(res);
+        localStorage.removeItem('user');
+        this.router.navigate(['/']);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+
 }

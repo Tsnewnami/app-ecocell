@@ -96,44 +96,46 @@ export class GoogleMapsService {
         var paddockData: number[];
         var polyOptionsFill: google.maps.PolygonOptions;
         var polyOptionsOutline: google.maps.PolygonOptions;
-        dialogRef.afterClosed().subscribe(async result => {
+        dialogRef.afterClosed().subscribe(result => {
           if (result) {
             const spinnerDialogRef =  this.dialog.open(LoadingSpinnerComponent, {
-            });
-            setTimeout(() => {
-             spinnerDialogRef.close()
-            }, 4000);
-            polyName = result[0].trim();
-            fillType = result[4];
+          });
 
-            if (result[1]){
-              paddockType = "Crop";
-            } else if (result[2]) {
-              paddockType = "Pasture";
-              paddockData = result[5];
-            } else if (result[3]) {
-              paddockType = "Orchard";
-            } else {
-              paddockType = "Other"
-            }
+          setTimeout(() => {
+             spinnerDialogRef.close();
+          }, 4000);
 
-            polyOptionsFill = this.setCurrentCropFill(fillType);
-            polyOptionsOutline = this.setCurrentOutline(paddockType);
+          polyName = result[0].trim();
+          fillType = result[4];
 
-            polygon.setOptions(polyOptionsFill);
-            polygon.setOptions(polyOptionsOutline);
+          if (result[1]){
+            paddockType = "Crop";
+          } else if (result[2]) {
+            paddockType = "Pasture";
+            paddockData = result[5];
+          } else if (result[3]) {
+            paddockType = "Orchard";
+          } else {
+            paddockType = "Other";
+          }
 
-            const userId = JSON.parse(localStorage.getItem('user'))['id'];
-            var coords = this.convertMvcToArray(polygon.getPath());
-            const index = Math.round(new Date().getTime() / 1000);
-            const name = polyName;
+          polyOptionsFill = this.setCurrentCropFill(fillType);
+          polyOptionsOutline = this.setCurrentOutline(paddockType);
 
-            this.renderedPolygons.push({
-              index: index,
-              polygon: polygon
-            });
+          polygon.setOptions(polyOptionsFill);
+          polygon.setOptions(polyOptionsOutline);
 
-            this.pushPolygonToDb(index, userId, name , coords[0], coords[1], polyOptionsFill.fillColor,  polyOptionsOutline.strokeColor, polyAreaHa, paddockType, fillType, result[6]);
+          const userId = JSON.parse(localStorage.getItem('user'))['id'];
+          var coords = this.convertMvcToArray(polygon.getPath());
+          const index = Math.round(new Date().getTime() / 1000);
+          const name = polyName;
+
+          this.renderedPolygons.push({
+            index: index,
+            polygon: polygon
+          });
+
+          this.pushPolygonToDb(index, userId, name , coords[0], coords[1], polyOptionsFill.fillColor,  polyOptionsOutline.strokeColor, polyAreaHa, paddockType, fillType, result[6]);
           } else{
             polygon.setMap(null);
             return;

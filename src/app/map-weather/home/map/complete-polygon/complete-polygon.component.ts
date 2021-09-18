@@ -71,10 +71,13 @@ export class CompletePolygonComponent implements OnInit {
 
     if (event.value == 'pasture') {
       this.pasture = true;
+      this.paddockFill = "modified pasture";
     } else if (event.value == 'crop') {
       this.crop = true;
+      this.paddockFill = "corn";
     } else if (event.value == 'orchard') {
       this.orchard = true;
+      this.paddockFill = "macadamia";
     }
 
   }

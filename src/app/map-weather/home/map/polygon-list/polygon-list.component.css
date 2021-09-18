@@ -61,6 +61,7 @@ ul{
 }
 
 a {
+  cursor: pointer;
   position: absolute;
   font-style: normal;
   font-weight: normal;
@@ -68,10 +69,11 @@ a {
   line-height: 32px;
   /* identical to box height, or 160% */
   letter-spacing: 0.25px;
-  color: #3CB15D;
 
   position: absolute;
   margin-left: 79px;
+  margin-top: 5px;
+  color: rgb(238, 11, 11);
 }
 
 li {

@@ -5,6 +5,10 @@
 
 }
 
+#pac-input {
+  width: 300px;
+}
+
 .paddock-list {
   margin-left: -15px;
 }

@@ -7,7 +7,7 @@
     <div class="container">
       <div class="row-one" >
         <h1 (click)="onPolyClick(polygon)"> {{polygon.name}}</h1>
-        <a (click)="onClearPolygonAndPaddockDetails(polygon, paddocks[i])">edit</a>
+        <a (click)="onClearPolygonAndPaddockDetails(polygon, paddocks[i])"><mat-icon>delete</mat-icon></a>
       </div>
       <div class="row-two" *ngIf="(paddocks$  |async)">
         <ul>

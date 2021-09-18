@@ -1,3 +1,4 @@
+import { AuthService } from './../../auth/auth.service';
 import { PaddockEntityService } from './../services/paddock-entity.service';
 import { FarmService } from './../services/farm.service';
 import { PolygonEntityService } from './../services/polygon-entity.service';
@@ -15,7 +16,8 @@ export class HomeComponent implements OnInit {
   constructor(
     private farmService: FarmService,
     private paddockEntityService: PaddockEntityService,
-    private polygonEntitiyService: PolygonEntityService
+    private polygonEntitiyService: PolygonEntityService,
+    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
@@ -25,6 +27,10 @@ export class HomeComponent implements OnInit {
     this.farmService.setCurrentFarm(null);
     this.paddockEntityService.clearCache();
     this.polygonEntitiyService.clearCache();
+  }
+
+  onLogout() {
+    this.authService.logout();
   }
 
 }

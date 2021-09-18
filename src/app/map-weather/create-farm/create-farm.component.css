@@ -8,6 +8,10 @@ mat-card {
   text-align: center;
 }
 
+button {
+  margin-bottom: 5px;
+}
+
 h1 {
   font-style: normal;
   font-weight: normal;

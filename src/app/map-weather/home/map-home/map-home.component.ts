@@ -1,3 +1,4 @@
+import { AuthService } from './../../../auth/auth.service';
 import { FarmService } from './../../services/farm.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -21,7 +22,8 @@ export class MapHomeComponent implements OnInit {
     private route: ActivatedRoute,
     private farmService: FarmService,
     private paddockEntityService: PaddockEntityService,
-    private polygonEntitiyService: PolygonEntityService) { }
+    private polygonEntitiyService: PolygonEntityService,
+    private authService: AuthService) { }
 
   ngOnInit(): void {
     this.reload();
@@ -37,6 +39,10 @@ export class MapHomeComponent implements OnInit {
     this.farmService.setCurrentFarm(null);
     this.paddockEntityService.clearCache();
     this.polygonEntitiyService.clearCache();
+  }
+
+  onLogout() {
+    this.authService.logout();
   }
 
 }
