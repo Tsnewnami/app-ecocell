@@ -12,6 +12,7 @@ import { Injectable } from '@angular/core';
 import { map, Subject } from 'rxjs';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { style } from '@angular/animations';
+import { ThrowStmt } from '@angular/compiler';
 
 @Injectable({
   providedIn: 'root'
@@ -130,10 +131,22 @@ export class GoogleMapsService {
           const index = Math.round(new Date().getTime() / 1000);
           const name = polyName;
 
+          var mapLabel = new google.maps.Marker({
+            position: this.polygonCenter(polygon),
+            map: this.map,
+            label: { color: '#ffffff', fontWeight: 'bold', fontSize: '14px', fontFamily: 'Roboto', text: polyName },
+            icon: 'assets/images/empty_image1.jpg',
+          });
+
+          mapLabel.set('position', this.polygonCenter(polygon))
+
+
           this.renderedPolygons.push({
             index: index,
-            polygon: polygon
+            polygon: polygon,
+            marker: mapLabel
           });
+
 
           this.pushPolygonToDb(index, userId, name , coords[0], coords[1], polyOptionsFill.fillColor,  polyOptionsOutline.strokeColor, polyAreaHa, paddockType, fillType, result[6]);
           } else{
@@ -293,9 +306,20 @@ export class GoogleMapsService {
 
     poly.setMap(this.map)
 
+
+    const mapLabel = new google.maps.Marker({
+      position: this.polygonCenter(poly),
+      map: this.map,
+      label: { color: '#ffffff', fontWeight: 'bold', fontSize: '14px', fontFamily: 'Roboto', text: polygon.name },
+      icon: 'assets/images/empty_image1.jpg',
+    });
+
+    mapLabel.set('position', this.polygonCenter(poly))
+
     this.renderedPolygons.push({
       index: index,
-      polygon: poly
+      polygon: poly,
+      marker: mapLabel
     });
   }
 
@@ -303,6 +327,7 @@ export class GoogleMapsService {
    for (let i = 0; i < this.renderedPolygons.length; i++) {
      if(this.renderedPolygons[i].index == index) {
         this.renderedPolygons[i].polygon.setMap(null);
+        this.renderedPolygons[i].marker.setMap(null);
         this.renderedPolygons[i] = null;
         this.renderedPolygons.splice(i, 1);
      }
@@ -396,5 +421,31 @@ export class GoogleMapsService {
     return polyOptions;
   }
 
+  private polygonCenter(poly) {
+    var lowx,
+        highx,
+        lowy,
+        highy,
+        lats = [],
+        lngs = [],
+        center_x,
+        center_y,
+        vertices = poly.getPath();
+
+    for(var i=0; i<vertices.length; i++) {
+      lngs.push(vertices.getAt(i).lng());
+      lats.push(vertices.getAt(i).lat());
+    }
+
+    lats.sort();
+    lngs.sort();
+    lowx = lats[0];
+    highx = lats[vertices.length - 1];
+    lowy = lngs[0];
+    highy = lngs[vertices.length - 1];
+    center_x = lowx + ((highx-lowx) / 2);
+    center_y = lowy + ((highy - lowy) / 2);
+    return (new google.maps.LatLng(center_x, center_y));
+  }
 
 }

@@ -15,7 +15,8 @@ export interface Polygon{
 
 export interface RenderedPolygon{
   index: number;
-  polygon: google.maps.Polygon
+  polygon: google.maps.Polygon;
+  marker: google.maps.Marker;
 }
 
 export function comparePolygons(p1:Polygon, p2:Polygon) {
